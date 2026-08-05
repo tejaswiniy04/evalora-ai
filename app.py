@@ -484,34 +484,46 @@ with st.sidebar:
     if st.session_state.authenticated and st.session_state.user_info:
         user_name = st.session_state.user_info.get("name", "User")
         st.markdown(f"👤 **Logged in as:**<br>**{user_name}**", unsafe_allow_html=True)
-        if st.button("Sign Out", use_container_width=True):
+        if st.button("Sign Out 🚪", use_container_width=True):
             logout_user()
         st.divider()
 
     st.markdown("### Navigation")
-    st.markdown("🔒 **Sign In**")
-    st.markdown("📝 **Create Account**")
-    st.markdown("ℹ️ **About Evalora AI**")
-    st.markdown("⚙️ **How It Works**")
-    st.markdown("⭐ **Features**")
+    if not st.session_state.authenticated:
+        st.markdown("🔑 **Sign In**")
+        st.markdown("📝 **Create Account**")
+        st.markdown("ℹ️ **About Evalora AI**")
+        st.markdown("⚙️ **How It Works**")
+        st.markdown("⭐ **Features**")
+    else:
+        # Interactive Step Navigation after login
+        s_step = st.session_state.step
+        nav_setup = "👉 **1. Setup Candidate & Role**" if s_step == "setup" else "📋 1. Setup Candidate & Role"
+        nav_interview = "👉 **2. Live Q&A Interview**" if s_step == "interview" else "🎯 2. Live Q&A Interview"
+        nav_eval = "👉 **3. Evaluation Report**" if s_step == "evaluation" else "📊 3. Evaluation Report"
+        
+        st.markdown(nav_setup)
+        st.markdown(nav_interview)
+        st.markdown(nav_eval)
 
     st.divider()
     st.markdown("### Progress")
     if st.session_state.step == "interview" and st.session_state.questions:
         q_num = st.session_state.current_q_idx + 1
         total_q = len(st.session_state.questions)
-        st.progress(q_num / total_q)
-        st.write(f"Question {q_num} of {total_q}")
+        pct = q_num / total_q
+        st.progress(pct)
+        st.write(f"Question {q_num} of {total_q} ({int(pct * 100)}%)")
     elif st.session_state.step == "evaluation":
         st.progress(1.0)
         st.write("Completed! (100%)")
     else:
         st.progress(0.0)
-        st.write("Not started (0%)")
+        st.write("Setup Phase (0%)")
 
     if st.session_state.step != "setup":
         st.divider()
-        if st.button("Reset Interview", use_container_width=True):
+        if st.button("Reset Interview 🔄", use_container_width=True):
             reset_session()
             st.rerun()
 
@@ -520,72 +532,71 @@ with st.sidebar:
 # ── Main Content Area ──────────────────────────────────────────────────────
 api_key = get_groq_api_key()
 
-# Render Template Hero Layout (Left Column = Features & Hero, Right Column = Interactive Card)
-col_hero, col_interactive = st.columns([1.1, 1], gap="large")
+# ───────────────────────────────────────────────────────────────────────────
+# STEP 0: LANDING & AUTHENTICATION GATE (BEFORE LOGIN ONLY)
+# ───────────────────────────────────────────────────────────────────────────
+if not st.session_state.authenticated:
+    col_hero, col_interactive = st.columns([1.1, 1], gap="large")
 
-with col_hero:
-    st.markdown('<span class="hero-badge">⭐ NEXT-GEN AI RECRUITMENT AGENT</span>', unsafe_allow_html=True)
-    st.markdown('<div class="brand-title">Evalora <span class="brand-accent">AI</span></div>', unsafe_allow_html=True)
-    st.markdown('<div class="brand-sub">Smarter Hiring, <span class="brand-accent">Better Teams</span></div>', unsafe_allow_html=True)
-    st.markdown('<div class="brand-desc">Structured Role-Based Interviewing, Real-Time Scoring & Comprehensive Evaluation — all powered by advanced AI.</div>', unsafe_allow_html=True)
+    with col_hero:
+        st.markdown('<span class="hero-badge">⭐ NEXT-GEN AI RECRUITMENT AGENT</span>', unsafe_allow_html=True)
+        st.markdown('<div class="brand-title">Evalora <span class="brand-accent">AI</span></div>', unsafe_allow_html=True)
+        st.markdown('<div class="brand-sub">Smarter Hiring, <span class="brand-accent">Better Teams</span></div>', unsafe_allow_html=True)
+        st.markdown('<div class="brand-desc">Structured Role-Based Interviewing, Real-Time Scoring & Comprehensive Evaluation — all powered by advanced AI.</div>', unsafe_allow_html=True)
 
-    # 4 Colorful Feature Cards
-    st.markdown("""
-    <div class="feature-card">
-        <div class="feature-icon icon-purple">👥</div>
-        <div>
-            <div style="font-weight: 700; color: #1e293b; font-size: 0.95rem;">Role-Based Interviews</div>
-            <div style="font-size: 0.82rem; color: #64748b;">Customized questions for every job role.</div>
-        </div>
-    </div>
-
-    <div class="feature-card">
-        <div class="feature-icon icon-blue">📊</div>
-        <div>
-            <div style="font-weight: 700; color: #1e293b; font-size: 0.95rem;">Real-Time Scoring</div>
-            <div style="font-size: 0.82rem; color: #64748b;">Instant evaluation and feedback per answer.</div>
-        </div>
-    </div>
-
-    <div class="feature-card">
-        <div class="feature-icon icon-green">🛡️</div>
-        <div>
-            <div style="font-weight: 700; color: #1e293b; font-size: 0.95rem;">Comprehensive Reports</div>
-            <div style="font-size: 0.82rem; color: #64748b;">Detailed insights, PDF reports, and analytics.</div>
-        </div>
-    </div>
-
-    <div class="feature-card">
-        <div class="feature-icon icon-orange">⚡</div>
-        <div>
-            <div style="font-weight: 700; color: #1e293b; font-size: 0.95rem;">AI-Powered Efficiency</div>
-            <div style="font-size: 0.82rem; color: #64748b;">Save time and hire the best talent effortlessly.</div>
-        </div>
-    </div>
-
-    <div class="stats-bar">
-        <div style="display: flex; justify-content: space-between; text-align: center;">
+        # 4 Colorful Feature Cards
+        st.markdown("""
+        <div class="feature-card">
+            <div class="feature-icon icon-purple">👥</div>
             <div>
-                <div style="font-weight: 800; font-size: 1.1rem; color: #1e293b;">👥 10K+</div>
-                <div style="font-size: 0.75rem; color: #64748b;">Interviews Conducted</div>
-            </div>
-            <div>
-                <div style="font-weight: 800; font-size: 1.1rem; color: #16a34a;">🏆 95%</div>
-                <div style="font-size: 0.75rem; color: #64748b;">Accuracy Rate</div>
-            </div>
-            <div>
-                <div style="font-weight: 800; font-size: 1.1rem; color: #d97706;">😊 500+</div>
-                <div style="font-size: 0.75rem; color: #64748b;">Companies Trust Us</div>
+                <div style="font-weight: 700; color: #1e293b; font-size: 0.95rem;">Role-Based Interviews</div>
+                <div style="font-size: 0.82rem; color: #64748b;">Customized questions for every job role.</div>
             </div>
         </div>
-    </div>
-    """, unsafe_allow_html=True)
 
-with col_interactive:
-    # ───────────────────────────────────────────────────────────────────────────
-    # STEP 0: AUTHENTICATION GATE (SIGN IN / SIGN UP)
-    # ───────────────────────────────────────────────────────────────────────────
-    if not st.session_state.authenticated:
+        <div class="feature-card">
+            <div class="feature-icon icon-blue">📊</div>
+            <div>
+                <div style="font-weight: 700; color: #1e293b; font-size: 0.95rem;">Real-Time Scoring</div>
+                <div style="font-size: 0.82rem; color: #64748b;">Instant evaluation and feedback per answer.</div>
+            </div>
+        </div>
+
+        <div class="feature-card">
+            <div class="feature-icon icon-green">🛡️</div>
+            <div>
+                <div style="font-weight: 700; color: #1e293b; font-size: 0.95rem;">Comprehensive Reports</div>
+                <div style="font-size: 0.82rem; color: #64748b;">Detailed insights, PDF reports, and analytics.</div>
+            </div>
+        </div>
+
+        <div class="feature-card">
+            <div class="feature-icon icon-orange">⚡</div>
+            <div>
+                <div style="font-weight: 700; color: #1e293b; font-size: 0.95rem;">AI-Powered Efficiency</div>
+                <div style="font-size: 0.82rem; color: #64748b;">Save time and hire the best talent effortlessly.</div>
+            </div>
+        </div>
+
+        <div class="stats-bar">
+            <div style="display: flex; justify-content: space-between; text-align: center;">
+                <div>
+                    <div style="font-weight: 800; font-size: 1.1rem; color: #1e293b;">👥 10K+</div>
+                    <div style="font-size: 0.75rem; color: #64748b;">Interviews Conducted</div>
+                </div>
+                <div>
+                    <div style="font-weight: 800; font-size: 1.1rem; color: #16a34a;">🏆 95%</div>
+                    <div style="font-size: 0.75rem; color: #64748b;">Accuracy Rate</div>
+                </div>
+                <div>
+                    <div style="font-weight: 800; font-size: 1.1rem; color: #d97706;">😊 500+</div>
+                    <div style="font-size: 0.75rem; color: #64748b;">Companies Trust Us</div>
+                </div>
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
+
+    with col_interactive:
         st.markdown("""
         <div class="lock-badge">🔒</div>
         <div style="text-align: center; margin-bottom: 1.5rem;">
@@ -625,7 +636,26 @@ with col_interactive:
                 else:
                     st.error(msg)
 
-        st.stop()  # Stop rendering until user is authenticated
+    st.stop()  # Stop rendering until user is authenticated
+
+# ───────────────────────────────────────────────────────────────────────────
+# WORKSPACE TOP HEADER BAR (AFTER LOGIN ONLY)
+# ───────────────────────────────────────────────────────────────────────────
+user_display = st.session_state.user_info.get("name", "User") if st.session_state.user_info else "User"
+current_step_name = {
+    "setup": "1. Interview Setup",
+    "interview": "2. Live Q&A Session",
+    "evaluation": "3. Evaluation Report"
+}.get(st.session_state.step, "Workspace")
+
+st.markdown(f"""
+<div style="background: #ffffff; border-radius: 20px; border: 1px solid #e8ecf4; box-shadow: 0 10px 30px rgba(100, 110, 140, 0.05); padding: 1.2rem 1.8rem; margin-bottom: 1.8rem; display: flex; align-items: center; justify-content: space-between;">
+    <div>
+        <div style="font-family: Outfit; font-size: 1.6rem; font-weight: 800; color: #1e293b; line-height: 1.2;">🎯 Evalora <span style="color:#5e5ce6;">AI Workspace</span></div>
+        <div style="font-size: 0.88rem; color: #64748b; margin-top: 4px;">Welcome back, <b>{user_display}</b> | Current Phase: <span style="color:#5e5ce6; font-weight: 700;">{current_step_name}</span></div>
+    </div>
+</div>
+""", unsafe_allow_html=True)
 
 # ───────────────────────────────────────────────────────────────────────────
 # STEP 1: INTERVIEW SETUP
