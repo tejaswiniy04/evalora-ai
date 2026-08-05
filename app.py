@@ -83,8 +83,84 @@ st.markdown("""
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700;800&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap');
 
-    /* Hide Streamlit Sidebar Completely */
+    /* Hide Streamlit Default Top Header & Sidebar Completely */
+    header[data-testid="stHeader"] {
+        background: transparent !important;
+        height: 0px !important;
+        min-height: 0px !important;
+        visibility: hidden !important;
+    }
+
     section[data-testid="stSidebar"] {
+        display: none !important;
+    }
+
+    .block-container {
+        padding-top: 1.2rem !important;
+        padding-bottom: 2rem !important;
+        max-width: 95% !important;
+    }
+
+    /* Glassmorphism Top Header Bar */
+    .glass-header-card {
+        background: rgba(255, 255, 255, 0.75) !important;
+        backdrop-filter: blur(16px) saturate(180%) !important;
+        -webkit-backdrop-filter: blur(16px) saturate(180%) !important;
+        border: 1px solid rgba(255, 255, 255, 0.8) !important;
+        box-shadow: 0 10px 30px rgba(94, 92, 230, 0.07), 0 2px 8px rgba(0, 0, 0, 0.02) !important;
+        border-radius: 24px !important;
+        padding: 0.8rem 1.6rem !important;
+        margin-bottom: 1.8rem !important;
+    }
+
+    /* Custom Glassmorphism Radio Button Styling (Pill Navigation) */
+    div[data-testid="stRadio"] > div {
+        display: flex !important;
+        flex-direction: row !important;
+        flex-wrap: wrap !important;
+        gap: 10px !important;
+        justify-content: center !important;
+        align-items: center !important;
+    }
+
+    div[data-testid="stRadio"] label {
+        background: rgba(255, 255, 255, 0.85) !important;
+        border: 1px solid #e2e8f0 !important;
+        border-radius: 30px !important;
+        padding: 6px 18px !important;
+        font-size: 0.82rem !important;
+        font-weight: 600 !important;
+        color: #475569 !important;
+        cursor: pointer !important;
+        transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.03) !important;
+    }
+
+    div[data-testid="stRadio"] label:hover {
+        background: #ffffff !important;
+        border-color: #5e5ce6 !important;
+        color: #5e5ce6 !important;
+        transform: translateY(-1px) !important;
+        box-shadow: 0 4px 14px rgba(94, 92, 230, 0.15) !important;
+    }
+
+    /* Selected Active Pill */
+    div[data-testid="stRadio"] label[data-checked="true"], div[data-testid="stRadio"] label:has(input:checked) {
+        background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%) !important;
+        border-color: #4f46e5 !important;
+        box-shadow: 0 4px 14px rgba(99, 102, 241, 0.35) !important;
+    }
+
+    div[data-testid="stRadio"] label[data-checked="true"] p, 
+    div[data-testid="stRadio"] label:has(input:checked) p, 
+    div[data-testid="stRadio"] label[data-checked="true"] span, 
+    div[data-testid="stRadio"] label:has(input:checked) span {
+        color: #ffffff !important;
+        font-weight: 700 !important;
+    }
+
+    /* Hide raw radio circle dot completely */
+    div[data-testid="stRadio"] label > div:first-child {
         display: none !important;
     }
 
@@ -468,15 +544,19 @@ def logout_user():
 # Initialize session state
 init_session_state()
 
-# ── Top Header Navigation Bar ──────────────────────────────────────────────
-col_hdr1, col_hdr2, col_hdr3 = st.columns([1.5, 3.2, 1.3], gap="small")
+# ── Top Header Navigation Bar (Glassmorphism Container) ─────────────────────
+st.markdown("""
+<div style="background: rgba(255, 255, 255, 0.75); backdrop-filter: blur(16px) saturate(180%); -webkit-backdrop-filter: blur(16px) saturate(180%); border: 1px solid rgba(255, 255, 255, 0.8); box-shadow: 0 10px 30px rgba(94, 92, 230, 0.08); border-radius: 24px; padding: 0.6rem 1.4rem; margin-bottom: 1.5rem;">
+""", unsafe_allow_html=True)
+
+col_hdr1, col_hdr2, col_hdr3 = st.columns([1.4, 3.4, 1.2], gap="small")
 
 with col_hdr1:
     st.markdown("""
-    <div style="display: flex; align-items: center; gap: 10px; padding: 2px 0;">
+    <div style="display: flex; align-items: center; gap: 10px; padding: 4px 0;">
         <img src="https://img.icons8.com/color/96/artificial-intelligence.png" width="38" />
         <div>
-            <div style="font-family: Outfit; font-size: 1.4rem; font-weight: 800; color: #1e293b; line-height: 1;">Evalora <span style="color:#5e5ce6;">AI</span></div>
+            <div style="font-family: Outfit; font-size: 1.45rem; font-weight: 800; color: #1e293b; line-height: 1.1;">Evalora <span style="color:#5e5ce6;">AI</span></div>
             <div style="font-size: 0.72rem; color: #64748b;">Structured AI Recruitment</div>
         </div>
     </div>
@@ -531,7 +611,7 @@ with col_hdr2:
 with col_hdr3:
     if not st.session_state.authenticated:
         st.markdown("""
-        <div style="background: #eeedff; border-radius: 12px; padding: 6px 12px; text-align: center;">
+        <div style="background: rgba(94, 92, 230, 0.08); border-radius: 14px; padding: 6px 12px; text-align: center; border: 1px solid rgba(94, 92, 230, 0.15);">
             <div style="font-size: 0.78rem; font-weight: 700; color: #1e293b;">🟢 AI Engine: Ready</div>
             <div style="font-size: 0.7rem; color: #64748b;">Groq Llama-3.1</div>
         </div>
@@ -545,7 +625,7 @@ with col_hdr3:
             if st.button("Sign Out 🚪", key="hdr_signout_btn", use_container_width=True):
                 logout_user()
 
-st.divider()
+st.markdown("</div>", unsafe_allow_html=True)
 
 # ── Main Content Area ──────────────────────────────────────────────────────
 api_key = get_groq_api_key()
