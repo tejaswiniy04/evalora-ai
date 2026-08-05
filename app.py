@@ -739,6 +739,18 @@ if not st.session_state.authenticated:
                 else:
                     st.error(msg)
 
+        # Footer Bar (Unauthenticated Landing)
+        st.markdown("""
+        <div style="margin-top: 3rem; padding: 1.5rem 0; border-top: 1px solid #e2e8f4; text-align: center; width: 100%;">
+            <div style="font-family: Outfit, sans-serif; font-size: 1.15rem; font-weight: 800; color: #1e293b;">
+                Evalora <span style="color:#5e5ce6;">AI</span>
+            </div>
+            <div style="font-size: 0.82rem; color: #64748b; margin-top: 4px;">
+                © 2026 Evalora AI. All rights reserved. | AI-Powered Recruitment Agent
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
+
         st.stop()  # Stop rendering until user is authenticated
 
 # ───────────────────────────────────────────────────────────────────────────
@@ -1067,3 +1079,15 @@ elif st.session_state.step == "evaluation":
         )
     except Exception as pdf_err:
         st.error(f"Failed to generate PDF: {pdf_err}")
+
+# ── Global App Footer Bar ──────────────────────────────────────────────────
+st.markdown("""
+<div style="margin-top: 3.5rem; padding: 1.8rem 0; border-top: 1px solid #e2e8f4; text-align: center; width: 100%;">
+    <div style="font-family: Outfit, sans-serif; font-size: 1.15rem; font-weight: 800; color: #1e293b;">
+        Evalora <span style="color:#5e5ce6;">AI</span>
+    </div>
+    <div style="font-size: 0.82rem; color: #64748b; margin-top: 4px;">
+        © 2026 Evalora AI. All rights reserved. | AI-Powered Structured Recruitment Platform
+    </div>
+</div>
+""", unsafe_allow_html=True)
