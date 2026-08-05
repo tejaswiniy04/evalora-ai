@@ -613,9 +613,7 @@ with col_interactive:
 
             st.markdown("<br>", unsafe_allow_html=True)
 
-    with tab_signup:
-        col_s1, col_s2 = st.columns([1, 1])
-        with col_s1:
+        with tab_signup:
             reg_name = st.text_input("Full Name", key="reg_name_val")
             reg_user = st.text_input("Username or Email", key="reg_user_val")
             reg_pass = st.text_input("Password", type="password", key="reg_pass_val")
@@ -627,7 +625,7 @@ with col_interactive:
                 else:
                     st.error(msg)
 
-    st.stop()  # Stop rendering until user is authenticated
+        st.stop()  # Stop rendering until user is authenticated
 
 # ───────────────────────────────────────────────────────────────────────────
 # STEP 1: INTERVIEW SETUP
