@@ -521,6 +521,8 @@ def init_session_state():
         st.session_state.answered_current = False
     if "last_result" not in st.session_state:
         st.session_state.last_result = None
+    if "auth_mode" not in st.session_state:
+        st.session_state.auth_mode = "login"
 
 
 def reset_session():
@@ -564,14 +566,22 @@ with col_hdr1:
 
 with col_hdr2:
     if not st.session_state.authenticated:
+        unauth_idx = 0 if st.session_state.auth_mode == "login" else 1
         nav_choice = st.radio(
             "Landing Header Navigation",
             options=["🔑 Sign In", "📝 Create Account", "ℹ️ About Evalora AI", "⚙️ How It Works", "⭐ Features"],
+            index=unauth_idx,
             horizontal=True,
             label_visibility="collapsed",
             key="hdr_unauth_nav_radio"
         )
-        if nav_choice == "ℹ️ About Evalora AI":
+        if nav_choice == "🔑 Sign In" and st.session_state.auth_mode != "login":
+            st.session_state.auth_mode = "login"
+            st.rerun()
+        elif nav_choice == "📝 Create Account" and st.session_state.auth_mode != "signup":
+            st.session_state.auth_mode = "signup"
+            st.rerun()
+        elif nav_choice == "ℹ️ About Evalora AI":
             st.info("🎯 **Evalora AI** provides role-based interviews, live voice/text scoring, and PDF candidate evaluation reports.")
         elif nav_choice == "⚙️ How It Works":
             st.success("1️⃣ **Sign In** -> 2️⃣ **Setup Role & Skills** -> 3️⃣ **Answer Live Questions** -> 4️⃣ **Export AI Report**")
@@ -697,15 +707,31 @@ if not st.session_state.authenticated:
     with col_interactive:
         st.markdown("""
         <div class="lock-badge">&#128274;</div>
-        <div style="text-align: center; margin-bottom: 1.5rem;">
-            <h3 style="margin: 0; font-size: 1.5rem;">Welcome Back! &#128075;</h3>
-            <div style="color: #64748b; font-size: 0.9rem;">Sign in to your Evalora AI account</div>
+        <div style="text-align: center; margin-bottom: 1.2rem;">
+            <h3 style="margin: 0; font-size: 1.5rem;">Welcome to Evalora AI &#128075;</h3>
+            <div style="color: #64748b; font-size: 0.88rem; margin-top: 4px;">Sign in or create your account to begin</div>
         </div>
         """, unsafe_allow_html=True)
 
-        tab_login, tab_signup = st.tabs(["🔑 Sign In", "📝 Create Account"])
+        card_auth_choice = st.radio(
+            "Card Authentication Selection",
+            options=["🔑 Sign In", "📝 Create Account"],
+            index=0 if st.session_state.auth_mode == "login" else 1,
+            horizontal=True,
+            label_visibility="collapsed",
+            key="card_auth_nav_radio"
+        )
 
-        with tab_login:
+        if "Sign In" in card_auth_choice and st.session_state.auth_mode != "login":
+            st.session_state.auth_mode = "login"
+            st.rerun()
+        elif "Create Account" in card_auth_choice and st.session_state.auth_mode != "signup":
+            st.session_state.auth_mode = "signup"
+            st.rerun()
+
+        st.markdown("<br>", unsafe_allow_html=True)
+
+        if st.session_state.auth_mode == "login":
             login_user = st.text_input("Email or Username", placeholder="Enter your email or username", key="login_username_val")
             login_pass = st.text_input("Password", type="password", placeholder="Enter your password", key="login_pass_val")
 
@@ -722,15 +748,17 @@ if not st.session_state.authenticated:
 
             st.markdown("<br>", unsafe_allow_html=True)
 
-        with tab_signup:
-            reg_name = st.text_input("Full Name", key="reg_name_val")
-            reg_user = st.text_input("Username or Email", key="reg_user_val")
-            reg_pass = st.text_input("Password", type="password", key="reg_pass_val")
+        else:
+            reg_name = st.text_input("Full Name", placeholder="Enter your full name", key="reg_name_val")
+            reg_user = st.text_input("Username or Email", placeholder="Enter username or email", key="reg_user_val")
+            reg_pass = st.text_input("Password", type="password", placeholder="Create a password", key="reg_pass_val")
 
-            if st.button("Register Account", type="primary", use_container_width=True):
+            if st.button("Register Account →", type="primary", use_container_width=True):
                 ok, msg = register_user(reg_name, reg_user, reg_pass)
                 if ok:
                     st.success(msg)
+                    st.session_state.auth_mode = "login"
+                    st.rerun()
                 else:
                     st.error(msg)
 
