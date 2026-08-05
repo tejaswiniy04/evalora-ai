@@ -400,6 +400,35 @@ st.markdown("""
         margin-bottom: 1.2rem;
     }
 
+    /* ── Animations ─────────────────────────────────────────────────── */
+    @keyframes fadeSlideUp {
+        from { opacity: 0; transform: translateY(18px); }
+        to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes scorePop {
+        0%   { opacity: 0; transform: scale(0.7); }
+        70%  { transform: scale(1.08); }
+        100% { opacity: 1; transform: scale(1); }
+    }
+    @keyframes slideInLeft {
+        from { opacity: 0; transform: translateX(-14px); }
+        to   { opacity: 1; transform: translateX(0); }
+    }
+    @keyframes slideInRight {
+        from { opacity: 0; transform: translateX(14px); }
+        to   { opacity: 1; transform: translateX(0); }
+    }
+    @keyframes stripGrow {
+        from { transform: scaleX(0); transform-origin: left; }
+        to   { transform: scaleX(1); transform-origin: left; }
+    }
+
+    .score-card-anim       { animation: fadeSlideUp 0.45s cubic-bezier(.22,.61,.36,1) both; }
+    .score-pill-anim       { animation: scorePop    0.5s cubic-bezier(.22,.61,.36,1) 0.2s both; }
+    .score-strip-anim      { animation: stripGrow   0.6s cubic-bezier(.22,.61,.36,1) 0.05s both; }
+    .score-col-left-anim   { animation: slideInLeft  0.4s cubic-bezier(.22,.61,.36,1) 0.3s both; }
+    .score-col-right-anim  { animation: slideInRight 0.4s cubic-bezier(.22,.61,.36,1) 0.4s both; }
+
     /* Question Card Styling */
     .q-card {
         background: #ffffff;
@@ -408,6 +437,12 @@ st.markdown("""
         padding: 1.8rem;
         margin-bottom: 1.5rem;
         box-shadow: 0 8px 30px rgba(0, 0, 0, 0.04);
+        animation: fadeSlideUp 0.4s cubic-bezier(.22,.61,.36,1) both;
+        transition: box-shadow 0.2s ease, transform 0.2s ease;
+    }
+    .q-card:hover {
+        box-shadow: 0 14px 40px rgba(99,102,241,0.10);
+        transform: translateY(-2px);
     }
 
     /* Category Badges */
@@ -974,17 +1009,17 @@ elif st.session_state.step == "interview":
         score_icon   = "🟢" if score >= 8 else ("🟡" if score >= 6 else "🔴")
 
         st.markdown(f"""
-        <div style="background:#ffffff; border:1px solid #e2e8f0; border-radius:20px;
+        <div class="score-card-anim" style="background:#ffffff; border:1px solid #e2e8f0; border-radius:20px;
                     box-shadow:0 8px 32px rgba(100,110,140,0.08); padding:1.8rem;
                     margin-bottom:1.5rem; position:relative; overflow:hidden;">
 
             <!-- top accent strip -->
-            <div style="position:absolute; top:0; left:0; right:0; height:4px;
+            <div class="score-strip-anim" style="position:absolute; top:0; left:0; right:0; height:4px;
                         background:linear-gradient(90deg,{score_color},{score_color}88);
                         border-radius:20px 20px 0 0;"></div>
 
             <!-- score pill row -->
-            <div style="display:flex; align-items:center; gap:1rem; margin-bottom:1.2rem; margin-top:0.4rem;">
+            <div class="score-pill-anim" style="display:flex; align-items:center; gap:1rem; margin-bottom:1.2rem; margin-top:0.4rem;">
                 <div style="background:{score_bg}; border:1px solid {score_border};
                             border-radius:50px; padding:0.5rem 1.2rem;
                             display:flex; align-items:center; gap:0.5rem;">
@@ -1002,14 +1037,14 @@ elif st.session_state.step == "interview":
 
             <!-- two-column strength / improvement -->
             <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
-                <div style="background:#f0fdf4; border:1px solid #bbf7d0; border-radius:14px; padding:1rem;">
+                <div class="score-col-left-anim" style="background:#f0fdf4; border:1px solid #bbf7d0; border-radius:14px; padding:1rem;">
                     <div style="font-size:0.78rem; font-weight:700; color:#15803d;
                                 text-transform:uppercase; letter-spacing:0.05em; margin-bottom:0.4rem;">
                         ✅ Strength
                     </div>
                     <div style="color:#166534; font-size:0.9rem; line-height:1.5;">{res.get('strengths', '')}</div>
                 </div>
-                <div style="background:#fffbeb; border:1px solid #fde68a; border-radius:14px; padding:1rem;">
+                <div class="score-col-right-anim" style="background:#fffbeb; border:1px solid #fde68a; border-radius:14px; padding:1rem;">
                     <div style="font-size:0.78rem; font-weight:700; color:#b45309;
                                 text-transform:uppercase; letter-spacing:0.05em; margin-bottom:0.4rem;">
                         🔧 Area to Improve
