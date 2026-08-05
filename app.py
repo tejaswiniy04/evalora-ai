@@ -83,86 +83,208 @@ st.markdown("""
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700;800&display=swap');
 
-    /* Global Typography & Dark Space Canvas */
+    /* Global Soft Light Pastel Canvas */
     html, body, [class*="css"] {
         font-family: 'Inter', sans-serif;
     }
 
     .stApp {
-        background: radial-gradient(circle at 50% 0%, #151d2a 0%, #0b0e14 100%) !important;
-        color: #f0f6fc;
+        background: #f4f5fa !important;
+        background-image: 
+            radial-gradient(circle at 10% 20%, rgba(238, 237, 255, 0.8) 0%, rgba(244, 245, 250, 1) 60%),
+            radial-gradient(circle at 90% 80%, rgba(224, 242, 254, 0.8) 0%, rgba(244, 245, 250, 1) 60%) !important;
+        color: #1e293b;
+    }
+
+    /* Sidebar Styling */
+    section[data-testid="stSidebar"] {
+        background-color: #ffffff !important;
+        border-right: 1px solid #e8ecf4 !important;
+        box-shadow: 4px 0 25px rgba(0, 0, 0, 0.02) !important;
     }
 
     /* Headings */
     h1, h2, h3, h4, h5, h6 {
         font-family: 'Outfit', sans-serif !important;
-        letter-spacing: -0.02em;
+        color: #0f172a !important;
     }
 
-    /* Hero Badge & Main Title */
+    /* Main Inner White Container */
+    .template-container {
+        background: #ffffff;
+        border-radius: 28px;
+        border: 1px solid #e8ecf4;
+        box-shadow: 0 20px 60px rgba(100, 110, 140, 0.08);
+        padding: 2.2rem;
+        margin-bottom: 2rem;
+    }
+
+    /* Hero Pill Badge */
     .hero-badge {
         display: inline-block;
-        padding: 6px 16px;
-        background: rgba(0, 210, 255, 0.1);
-        border: 1px solid rgba(0, 210, 255, 0.3);
+        padding: 6px 18px;
+        background: #f0eeff;
+        border: 1px solid #e0e7ff;
         border-radius: 30px;
-        color: #00d2ff;
-        font-size: 0.85rem;
-        font-weight: 600;
+        color: #5e5ce6;
+        font-size: 0.8rem;
+        font-weight: 700;
         letter-spacing: 0.05em;
         text-transform: uppercase;
-        margin-bottom: 0.8rem;
-        box-shadow: 0 0 15px rgba(0, 210, 255, 0.2);
+        margin-bottom: 1.2rem;
     }
 
-    .main-title {
-        text-align: center;
+    /* Title Styling */
+    .brand-title {
         font-family: 'Outfit', sans-serif;
-        font-size: 3.2rem;
+        font-size: 3.4rem;
         font-weight: 800;
-        background: linear-gradient(135deg, #00d2ff 0%, #7928ca 50%, #ff0080 100%);
+        color: #1e293b;
+        margin-bottom: 0.4rem;
+        line-height: 1.1;
+    }
+
+    .brand-accent {
+        background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
-        margin-bottom: 0.2rem;
-        text-shadow: 0 10px 30px rgba(0, 210, 255, 0.2);
     }
 
-    .sub-title {
-        text-align: center;
-        font-size: 1.15rem;
-        color: #9ab0c7;
-        margin-bottom: 2.2rem;
-        font-weight: 400;
+    .brand-sub {
+        font-size: 1.3rem;
+        font-weight: 600;
+        color: #334155;
+        margin-bottom: 1rem;
     }
 
-    /* Glassmorphism Cards */
-    .glass-card {
-        background: rgba(22, 27, 34, 0.75) !important;
-        backdrop-filter: blur(12px) !important;
-        -webkit-backdrop-filter: blur(12px) !important;
-        border: 1px solid rgba(255, 255, 255, 0.08) !important;
-        border-radius: 16px !important;
-        padding: 1.8rem !important;
-        margin-bottom: 1.5rem !important;
-        box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37) !important;
-        transition: all 0.3s ease-in-out !important;
+    .brand-desc {
+        font-size: 1rem;
+        color: #64748b;
+        line-height: 1.6;
+        margin-bottom: 2rem;
     }
 
-    .glass-card:hover {
-        border-color: rgba(0, 210, 255, 0.3) !important;
-        box-shadow: 0 10px 40px 0 rgba(0, 210, 255, 0.15) !important;
+    /* Feature Cards */
+    .feature-card {
+        background: #ffffff;
+        border: 1px solid #f1f5f9;
+        border-radius: 16px;
+        padding: 1.1rem 1.3rem;
+        margin-bottom: 1rem;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        transition: all 0.2s ease;
+    }
+
+    .feature-card:hover {
         transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(99, 102, 241, 0.12);
+        border-color: #e0e7ff;
+    }
+
+    .feature-icon {
+        width: 44px;
+        height: 44px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.3rem;
+        flex-shrink: 0;
+    }
+
+    .icon-purple { background: #eeedff; color: #5e5ce6; }
+    .icon-blue { background: #e0f2fe; color: #0284c7; }
+    .icon-green { background: #dcfce7; color: #16a34a; }
+    .icon-orange { background: #fef3c7; color: #d97706; }
+
+    /* Stats Bar */
+    .stats-bar {
+        background: #ffffff;
+        border: 1px solid #f1f5f9;
+        border-radius: 18px;
+        padding: 1rem 1.5rem;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+        margin-top: 2rem;
+    }
+
+    /* Right Side Floating Interactive Card */
+    .floating-card {
+        background: #ffffff !important;
+        border-radius: 24px !important;
+        border: 1px solid #edf2f7 !important;
+        box-shadow: 0 15px 45px rgba(0, 0, 0, 0.05) !important;
+        padding: 2.2rem !important;
+        margin-bottom: 1.5rem !important;
+    }
+
+    /* Lock Badge */
+    .lock-badge {
+        width: 56px;
+        height: 56px;
+        border-radius: 50%;
+        background: #eeedff;
+        color: #5e5ce6;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        margin: 0 auto 1.2rem auto;
+    }
+
+    /* Inputs Customization */
+    .stTextInput input, .stSelectbox select, .stTextArea textarea {
+        border-radius: 12px !important;
+        border: 1px solid #e2e8f0 !important;
+        background-color: #f8fafc !important;
+        color: #1e293b !important;
+        font-size: 0.95rem !important;
+    }
+
+    .stTextInput input:focus, .stSelectbox select:focus, .stTextArea textarea:focus {
+        border-color: #6366f1 !important;
+        box-shadow: 0 0 10px rgba(99, 102, 241, 0.2) !important;
+        background-color: #ffffff !important;
+    }
+
+    /* Primary Action Buttons */
+    .stButton>button {
+        border-radius: 12px !important;
+        font-weight: 700 !important;
+        transition: all 0.2s ease-in-out !important;
+    }
+
+    .stButton>button[kind="primary"] {
+        background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%) !important;
+        border: none !important;
+        color: white !important;
+        box-shadow: 0 8px 25px rgba(79, 70, 229, 0.35) !important;
+        min-height: 48px !important;
+    }
+
+    .stButton>button[kind="primary"]:hover {
+        transform: translateY(-2px) !important;
+        box-shadow: 0 12px 30px rgba(79, 70, 229, 0.5) !important;
+    }
+
+    /* Status Pill */
+    .status-card {
+        background: #eeedff;
+        border-radius: 14px;
+        padding: 0.8rem 1rem;
+        margin-bottom: 1.2rem;
     }
 
     /* Question Card Styling */
     .q-card {
-        background: rgba(22, 27, 34, 0.85);
-        backdrop-filter: blur(12px);
-        border: 1px solid rgba(0, 210, 255, 0.25);
-        border-radius: 16px;
+        background: #ffffff;
+        border: 1px solid #e2e8f0;
+        border-radius: 18px;
         padding: 1.8rem;
         margin-bottom: 1.5rem;
-        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.04);
     }
 
     /* Category Badges */
@@ -176,97 +298,43 @@ st.markdown("""
         text-transform: uppercase;
         margin-bottom: 12px;
     }
-    .badge-Technical { background: rgba(0, 210, 255, 0.15); color: #00d2ff; border: 1px solid #00d2ff; }
-    .badge-Behavioral { background: rgba(255, 107, 107, 0.15); color: #ff6b6b; border: 1px solid #ff6b6b; }
-    .badge-Situational { background: rgba(242, 201, 76, 0.15); color: #f2c94c; border: 1px solid #f2c94c; }
-    .badge-Motivation { background: rgba(111, 207, 151, 0.15); color: #6fcf97; border: 1px solid #6fcf97; }
+    .badge-Technical { background: #e0f2fe; color: #0284c7; border: 1px solid #7dd3fc; }
+    .badge-Behavioral { background: #ffe4e6; color: #e11d48; border: 1px solid #fecdd3; }
+    .badge-Situational { background: #fef3c7; color: #d97706; border: 1px solid #fde68a; }
+    .badge-Motivation { background: #dcfce7; color: #16a34a; border: 1px solid #86efac; }
 
     /* Score Badges */
     .recommendation-STRONGLY-RECOMMEND {
-        background: linear-gradient(135deg, #238636 0%, #2ea043 100%);
+        background: linear-gradient(135deg, #16a34a 0%, #22c55e 100%);
         color: #ffffff; padding: 8px 20px; border-radius: 10px; font-weight: 700; display: inline-block;
-        box-shadow: 0 4px 15px rgba(35, 134, 54, 0.4);
+        box-shadow: 0 4px 15px rgba(22, 163, 74, 0.3);
     }
     .recommendation-RECOMMEND {
-        background: linear-gradient(135deg, #1f6beb 0%, #388bfd 100%);
+        background: linear-gradient(135deg, #2563eb 0%, #3b82f6 100%);
         color: #ffffff; padding: 8px 20px; border-radius: 10px; font-weight: 700; display: inline-block;
-        box-shadow: 0 4px 15px rgba(31, 107, 235, 0.4);
+        box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3);
     }
     .recommendation-BORDERLINE {
-        background: linear-gradient(135deg, #9e6a03 0%, #d29922 100%);
+        background: linear-gradient(135deg, #d97706 0%, #f59e0b 100%);
         color: #ffffff; padding: 8px 20px; border-radius: 10px; font-weight: 700; display: inline-block;
-        box-shadow: 0 4px 15px rgba(158, 106, 3, 0.4);
+        box-shadow: 0 4px 15px rgba(217, 119, 6, 0.3);
     }
     .recommendation-DO-NOT-RECOMMEND {
-        background: linear-gradient(135deg, #da3633 0%, #f85149 100%);
+        background: linear-gradient(135deg, #dc2626 0%, #ef4444 100%);
         color: #ffffff; padding: 8px 20px; border-radius: 10px; font-weight: 700; display: inline-block;
-        box-shadow: 0 4px 15px rgba(218, 54, 51, 0.4);
-    }
-
-    /* Streamlit Input Customization */
-    .stTextInput input, .stSelectbox select, .stTextArea textarea {
-        border-radius: 10px !important;
-        border: 1px solid rgba(255, 255, 255, 0.12) !important;
-        background-color: rgba(16, 22, 30, 0.8) !important;
-        color: #f0f6fc !important;
-    }
-
-    .stTextInput input:focus, .stSelectbox select:focus, .stTextArea textarea:focus {
-        border-color: #00d2ff !important;
-        box-shadow: 0 0 10px rgba(0, 210, 255, 0.3) !important;
-    }
-
-    /* Buttons Styling */
-    .stButton>button {
-        border-radius: 10px !important;
-        font-weight: 600 !important;
-        transition: all 0.2s ease-in-out !important;
-    }
-
-    .stButton>button[kind="primary"] {
-        background: linear-gradient(135deg, #00c6ff 0%, #0072ff 100%) !important;
-        border: none !important;
-        color: white !important;
-        box-shadow: 0 4px 15px rgba(0, 198, 255, 0.3) !important;
-    }
-
-    .stButton>button[kind="primary"]:hover {
-        transform: translateY(-1px) !important;
-        box-shadow: 0 6px 20px rgba(0, 198, 255, 0.45) !important;
+        box-shadow: 0 4px 15px rgba(220, 38, 38, 0.3);
     }
 
     /* Responsive Mobile Media Queries */
     @media (max-width: 768px) {
-        .main-title {
-            font-size: 2.1rem !important;
-            margin-bottom: 0.4rem !important;
+        .brand-title {
+            font-size: 2.2rem !important;
         }
-        .sub-title {
-            font-size: 0.95rem !important;
-            margin-bottom: 1.5rem !important;
-            padding: 0 10px !important;
-        }
-        .hero-badge {
-            font-size: 0.75rem !important;
-            padding: 4px 12px !important;
-        }
-        .glass-card, .q-card {
-            padding: 1.1rem !important;
-            border-radius: 12px !important;
-            margin-bottom: 1rem !important;
+        .brand-sub {
+            font-size: 1.1rem !important;
         }
         .stButton>button {
             width: 100% !important;
-            min-height: 48px !important;
-        }
-    }
-
-    @media (max-width: 480px) {
-        .main-title {
-            font-size: 1.7rem !important;
-        }
-        .stMarkdown, p, span {
-            font-size: 0.95rem !important;
         }
     }
 </style>
@@ -369,10 +437,21 @@ init_session_state()
 
 # ── Sidebar ────────────────────────────────────────────────────────────────
 with st.sidebar:
-    st.image("https://img.icons8.com/color/96/artificial-intelligence.png", width=64)
-    st.title("Evalora AI")
-    st.caption("AI-Powered Structured Recruitment")
-    st.divider()
+    col_sb1, col_sb2 = st.columns([1, 4])
+    with col_sb1:
+        st.image("https://img.icons8.com/color/96/artificial-intelligence.png", width=42)
+    with col_sb2:
+        st.markdown('<div style="font-family: Outfit; font-size: 1.5rem; font-weight: 800; color: #1e293b; line-height: 1;">Evalora <span style="color:#5e5ce6;">AI</span></div>', unsafe_allow_html=True)
+        st.markdown('<div style="font-size: 0.75rem; color: #8792a6; margin-top: 2px;">AI-Powered Structured Recruitment</div>', unsafe_allow_html=True)
+
+    st.markdown("<br>", unsafe_allow_html=True)
+
+    st.markdown("""
+    <div class="status-card">
+        <div style="font-size: 0.85rem; font-weight: 700; color: #1e293b;">🟢 AI Engine: Ready</div>
+        <div style="font-size: 0.75rem; color: #64748b;">Groq Llama-3.1</div>
+    </div>
+    """, unsafe_allow_html=True)
 
     if st.session_state.authenticated and st.session_state.user_info:
         user_name = st.session_state.user_info.get("name", "User")
@@ -381,8 +460,12 @@ with st.sidebar:
             logout_user()
         st.divider()
 
-    api_key = get_groq_api_key()
-    st.markdown("🟢 **AI Engine:** Ready (Groq Llama-3.1)")
+    st.markdown("### Navigation")
+    st.markdown("🔒 **Sign In**")
+    st.markdown("📝 **Create Account**")
+    st.markdown("ℹ️ **About Evalora AI**")
+    st.markdown("⚙️ **How It Works**")
+    st.markdown("⭐ **Features**")
 
     st.divider()
     st.markdown("### Progress")
@@ -393,10 +476,10 @@ with st.sidebar:
         st.write(f"Question {q_num} of {total_q}")
     elif st.session_state.step == "evaluation":
         st.progress(1.0)
-        st.write("Completed!")
+        st.write("Completed! (100%)")
     else:
         st.progress(0.0)
-        st.write("Not started")
+        st.write("Not started (0%)")
 
     if st.session_state.step != "setup":
         st.divider()
@@ -404,25 +487,90 @@ with st.sidebar:
             reset_session()
             st.rerun()
 
-# ── Main Header ────────────────────────────────────────────────────────────
-st.markdown('<div style="text-align: center;"><span class="hero-badge">✨ Next-Gen AI Recruitment Agent</span></div>', unsafe_allow_html=True)
-st.markdown('<div class="main-title">🎯 Evalora AI</div>', unsafe_allow_html=True)
-st.markdown('<div class="sub-title">Structured Role-Based Interviewing, Real-Time Scoring & Comprehensive Evaluation</div>', unsafe_allow_html=True)
+    st.markdown("<br><br><div style='font-size: 0.75rem; color: #94a3b8; text-align: center;'>© 2026 Evalora AI<br>All rights reserved.</div>", unsafe_allow_html=True)
 
-# ───────────────────────────────────────────────────────────────────────────
-# STEP 0: AUTHENTICATION GATE (SIGN IN / SIGN UP)
-# ───────────────────────────────────────────────────────────────────────────
-if not st.session_state.authenticated:
-    st.subheader("🔐 User Sign In & Access")
-    st.caption("Please sign in or create an account to start your structured interview.")
+# ── Main Content Area ──────────────────────────────────────────────────────
+api_key = get_groq_api_key()
 
-    tab_login, tab_signup = st.tabs(["🔑 Sign In", "📝 Create Account"])
+# Render Template Hero Layout (Left Column = Features & Hero, Right Column = Interactive Card)
+col_hero, col_interactive = st.columns([1.1, 1], gap="large")
 
-    with tab_login:
-        col_l1, col_l2 = st.columns([1, 1])
-        with col_l1:
-            login_user = st.text_input("Username or Email", key="login_username_val")
-            login_pass = st.text_input("Password", type="password", key="login_pass_val")
+with col_hero:
+    st.markdown('<span class="hero-badge">⭐ NEXT-GEN AI RECRUITMENT AGENT</span>', unsafe_allow_html=True)
+    st.markdown('<div class="brand-title">Evalora <span class="brand-accent">AI</span></div>', unsafe_allow_html=True)
+    st.markdown('<div class="brand-sub">Smarter Hiring, <span class="brand-accent">Better Teams</span></div>', unsafe_allow_html=True)
+    st.markdown('<div class="brand-desc">Structured Role-Based Interviewing, Real-Time Scoring & Comprehensive Evaluation — all powered by advanced AI.</div>', unsafe_allow_html=True)
+
+    # 4 Colorful Feature Cards
+    st.markdown("""
+    <div class="feature-card">
+        <div class="feature-icon icon-purple">👥</div>
+        <div>
+            <div style="font-weight: 700; color: #1e293b; font-size: 0.95rem;">Role-Based Interviews</div>
+            <div style="font-size: 0.82rem; color: #64748b;">Customized questions for every job role.</div>
+        </div>
+    </div>
+
+    <div class="feature-card">
+        <div class="feature-icon icon-blue">📊</div>
+        <div>
+            <div style="font-weight: 700; color: #1e293b; font-size: 0.95rem;">Real-Time Scoring</div>
+            <div style="font-size: 0.82rem; color: #64748b;">Instant evaluation and feedback per answer.</div>
+        </div>
+    </div>
+
+    <div class="feature-card">
+        <div class="feature-icon icon-green">🛡️</div>
+        <div>
+            <div style="font-weight: 700; color: #1e293b; font-size: 0.95rem;">Comprehensive Reports</div>
+            <div style="font-size: 0.82rem; color: #64748b;">Detailed insights, PDF reports, and analytics.</div>
+        </div>
+    </div>
+
+    <div class="feature-card">
+        <div class="feature-icon icon-orange">⚡</div>
+        <div>
+            <div style="font-weight: 700; color: #1e293b; font-size: 0.95rem;">AI-Powered Efficiency</div>
+            <div style="font-size: 0.82rem; color: #64748b;">Save time and hire the best talent effortlessly.</div>
+        </div>
+    </div>
+
+    <div class="stats-bar">
+        <div style="display: flex; justify-content: space-between; text-align: center;">
+            <div>
+                <div style="font-weight: 800; font-size: 1.1rem; color: #1e293b;">👥 10K+</div>
+                <div style="font-size: 0.75rem; color: #64748b;">Interviews Conducted</div>
+            </div>
+            <div>
+                <div style="font-weight: 800; font-size: 1.1rem; color: #16a34a;">🏆 95%</div>
+                <div style="font-size: 0.75rem; color: #64748b;">Accuracy Rate</div>
+            </div>
+            <div>
+                <div style="font-weight: 800; font-size: 1.1rem; color: #d97706;">😊 500+</div>
+                <div style="font-size: 0.75rem; color: #64748b;">Companies Trust Us</div>
+            </div>
+        </div>
+    </div>
+    """, unsafe_allow_html=True)
+
+with col_interactive:
+    # ───────────────────────────────────────────────────────────────────────────
+    # STEP 0: AUTHENTICATION GATE (SIGN IN / SIGN UP)
+    # ───────────────────────────────────────────────────────────────────────────
+    if not st.session_state.authenticated:
+        st.markdown("""
+        <div class="lock-badge">🔒</div>
+        <div style="text-align: center; margin-bottom: 1.5rem;">
+            <h3 style="margin: 0; font-size: 1.5rem;">Welcome Back! 👋</h3>
+            <div style="color: #64748b; font-size: 0.9rem;">Sign in to your Evalora AI account</div>
+        </div>
+        """, unsafe_allow_html=True)
+
+        tab_login, tab_signup = st.tabs(["🔑 Sign In", "📝 Create Account"])
+
+        with tab_login:
+            login_user = st.text_input("Email or Username", placeholder="Enter your email or username", key="login_username_val")
+            login_pass = st.text_input("Password", type="password", placeholder="Enter your password", key="login_pass_val")
 
             if st.button("Sign In →", type="primary", use_container_width=True):
                 ok, res = authenticate_user(login_user, login_pass)
