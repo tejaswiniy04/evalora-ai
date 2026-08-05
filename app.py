@@ -500,6 +500,15 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 
+def render_html(html_str: str):
+    """Cleanly render raw HTML in Streamlit without triggering Markdown code block parser rules."""
+    cleaned_html = "\n".join(line.strip() for line in html_str.splitlines() if line.strip())
+    if hasattr(st, "html"):
+        st.html(cleaned_html)
+    else:
+        st.markdown(cleaned_html, unsafe_allow_html=True)
+
+
 _FALLBACK_KEY_PARTS = [
     "gsk_klvyXdbfFdK7",
     "BAiHXIuNWGdyb3FY",
@@ -1021,7 +1030,7 @@ elif st.session_state.step == "interview":
         score_label  = "Excellent" if score >= 8 else ("Good" if score >= 6 else "Needs Work")
         score_icon   = "🟢" if score >= 8 else ("🟡" if score >= 6 else "🔴")
 
-        st.markdown(textwrap.dedent(f"""
+        render_html(f"""
         <div class="score-card-anim" style="background:#ffffff; border:1px solid #e2e8f0; border-radius:20px;
                     box-shadow:0 8px 32px rgba(100,110,140,0.08); padding:1.8rem;
                     margin-bottom:1.5rem; position:relative; overflow:hidden;">
@@ -1066,7 +1075,7 @@ elif st.session_state.step == "interview":
                 </div>
             </div>
         </div>
-        """), unsafe_allow_html=True)
+        """)
 
         if q_idx + 1 < len(questions):
             if st.button("Next Question →", type="primary"):
