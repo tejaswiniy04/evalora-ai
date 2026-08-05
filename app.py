@@ -577,6 +577,7 @@ def init_session_state():
 
 def reset_session():
     st.session_state.step = "setup"
+    st.session_state._nav_step_sync = "setup"
     st.session_state.current_q_idx = 0
     st.session_state.questions = []
     st.session_state.qa_results = []
@@ -635,10 +636,19 @@ with col_hdr2:
         # Interactive Step Navigation Pills after login
         s_step = st.session_state.step
         step_idx = {"setup": 0, "interview": 1, "evaluation": 2}.get(s_step, 0)
+        nav_options = ["📋 1. Setup Role", "🎯 2. Live Interview", "📊 3. Evaluation Report"]
+
+        # Keep radio widget key synchronized with st.session_state.step
+        if "hdr_auth_step_nav_radio" in st.session_state:
+            if st.session_state.get("_nav_step_sync") != s_step:
+                st.session_state.hdr_auth_step_nav_radio = nav_options[step_idx]
+                st.session_state._nav_step_sync = s_step
+        else:
+            st.session_state._nav_step_sync = s_step
 
         selected_nav_step = st.radio(
             "Header Phase Navigation",
-            options=["📋 1. Setup Role", "🎯 2. Live Interview", "📊 3. Evaluation Report"],
+            options=nav_options,
             index=step_idx,
             horizontal=True,
             label_visibility="collapsed",
@@ -648,16 +658,19 @@ with col_hdr2:
         # Interactive Navigation Click Handlers
         if "1. Setup Role" in selected_nav_step and st.session_state.step != "setup":
             st.session_state.step = "setup"
+            st.session_state._nav_step_sync = "setup"
             st.rerun()
         elif "2. Live Interview" in selected_nav_step and st.session_state.step != "interview":
             if st.session_state.questions:
                 st.session_state.step = "interview"
+                st.session_state._nav_step_sync = "interview"
                 st.rerun()
             else:
                 st.warning("⚠️ Complete Setup first to generate questions.")
         elif "3. Evaluation Report" in selected_nav_step and st.session_state.step != "evaluation":
             if st.session_state.evaluation:
                 st.session_state.step = "evaluation"
+                st.session_state._nav_step_sync = "evaluation"
                 st.rerun()
             else:
                 st.warning("⚠️ Complete Q&A interview first to view Evaluation Report.")
@@ -914,8 +927,9 @@ if st.session_state.step == "setup":
                             skills=parsed_skills,
                             candidate_name=name_input
                         )
-                        st.session_state.session_obj.questions = questions
                         st.session_state.step = "interview"
+                        st.session_state._nav_step_sync = "interview"
+                        st.session_state.hdr_auth_step_nav_radio = "🎯 2. Live Interview"
                         st.rerun()
                     except Exception as e:
                         st.error(f"Error generating questions: {e}")
@@ -1083,6 +1097,8 @@ elif st.session_state.step == "interview":
                             logger.warning(f"Could not send interview result email: {email_err}")
 
                         st.session_state.step = "evaluation"
+                        st.session_state._nav_step_sync = "evaluation"
+                        st.session_state.hdr_auth_step_nav_radio = "📊 3. Evaluation Report"
                         st.rerun()
 
     # Progress so far accordion
