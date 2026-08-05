@@ -1,0 +1,6 @@
+groq==1.6.0
+python-dotenv==1.0.1
+rich==13.7.1
+streamlit>=1.30.0
+starlette<0.40.0
+fpdf2>=2.7.8

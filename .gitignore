@@ -1,0 +1,19 @@
+# Environment & secrets
+.env
+users.json
+
+# Virtual environment
+venv/
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Live session transcripts (sample_transcripts/ is committed, transcripts/ is not)
+transcripts/
+
+# IDE
+.vscode/
+.idea/

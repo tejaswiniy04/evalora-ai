@@ -1,0 +1,152 @@
+{
+  "session_id": "20260805_120000",
+  "candidate_name": "Priya Sharma",
+  "role": "Junior ML Engineer",
+  "skills": ["Python", "Machine Learning", "NLP", "PyTorch", "SQL"],
+  "started_at": "2026-08-05T12:00:00",
+  "completed_at": "2026-08-05T12:42:00",
+  "questions_count": 7,
+  "average_score_10": 7.0,
+  "overall_score_100": 72.0,
+  "recommendation": "RECOMMEND",
+  "questions": [
+    {
+      "id": 1,
+      "category": "Technical",
+      "question": "Explain the difference between supervised and unsupervised learning. Give one real-world example of each.",
+      "focus": "Core ML concepts"
+    },
+    {
+      "id": 2,
+      "category": "Technical",
+      "question": "What is the vanishing gradient problem in deep neural networks, and how can it be mitigated?",
+      "focus": "Deep Learning / PyTorch"
+    },
+    {
+      "id": 3,
+      "category": "Technical",
+      "question": "How would you preprocess raw text data for an NLP classification task? Walk me through your pipeline.",
+      "focus": "NLP preprocessing pipeline"
+    },
+    {
+      "id": 4,
+      "category": "Behavioral",
+      "question": "Tell me about a time you had to debug a model that wasn't performing as expected. What steps did you take?",
+      "focus": "Problem-solving, debugging mindset"
+    },
+    {
+      "id": 5,
+      "category": "Behavioral",
+      "question": "Describe a project where you had to learn a new tool or framework under time pressure. How did you manage it?",
+      "focus": "Adaptability, learning agility"
+    },
+    {
+      "id": 6,
+      "category": "Situational",
+      "question": "Imagine you're given a dataset of customer support tickets and asked to build a model that automatically categorises them. You have one week. Walk me through your approach from data exploration to deployment.",
+      "focus": "End-to-end ML project planning"
+    },
+    {
+      "id": 7,
+      "category": "Motivation",
+      "question": "Why do you want to work as a Machine Learning Engineer specifically, and what area of ML excites you the most right now?",
+      "focus": "Career alignment, passion"
+    }
+  ],
+  "qa_results": [
+    {
+      "question_id": 1,
+      "question": "Explain the difference between supervised and unsupervised learning. Give one real-world example of each.",
+      "category": "Technical",
+      "focus": "Core ML concepts",
+      "answer": "Supervised learning uses labelled data where we know the correct output for each input. The model learns a mapping from inputs to outputs. A classic example is email spam detection — emails are labelled as spam or not spam, and the model learns to classify new emails. Unsupervised learning works with unlabelled data and finds hidden patterns or structures. Clustering customer segments by purchase behaviour is a good example — we don't tell the model what the segments should be, it discovers them on its own.",
+      "score": 9,
+      "feedback": "Excellent answer. The candidate demonstrated a clear conceptual understanding of both paradigms and chose highly relevant, practical examples that show they can connect theory to real-world applications.",
+      "strengths": "Clear definitions, strong examples, and the answer was well-structured.",
+      "improvement": "Could also briefly mention semi-supervised learning to show broader knowledge."
+    },
+    {
+      "question_id": 2,
+      "question": "What is the vanishing gradient problem in deep neural networks, and how can it be mitigated?",
+      "category": "Technical",
+      "focus": "Deep Learning / PyTorch",
+      "answer": "The vanishing gradient problem happens when gradients become very small as they are backpropagated through many layers. Because we multiply gradients layer by layer during backpropagation, if each gradient is less than 1, they shrink exponentially. This makes the earlier layers learn very slowly or not at all. Some ways to fix it: use ReLU activation instead of sigmoid or tanh because ReLU doesn't saturate for positive values. Batch normalisation helps too by keeping activations in a stable range. You can also use residual connections like in ResNets which let gradients flow directly through skip connections.",
+      "score": 8,
+      "feedback": "Strong answer demonstrating solid deep learning fundamentals. The candidate correctly identified the root cause and gave multiple valid mitigation strategies.",
+      "strengths": "Covered three distinct solutions with good explanations for each.",
+      "improvement": "Mentioning gradient clipping or LSTM/GRU for sequence models would have made the answer more complete."
+    },
+    {
+      "question_id": 3,
+      "question": "How would you preprocess raw text data for an NLP classification task? Walk me through your pipeline.",
+      "category": "Technical",
+      "focus": "NLP preprocessing pipeline",
+      "answer": "First I'd start with cleaning — remove HTML tags, special characters, and normalise whitespace. Then lowercase everything. Then tokenisation to split text into words or subwords. For traditional ML I'd do stopword removal and maybe stemming or lemmatisation. Then I'd create features — either TF-IDF vectors for simpler models, or use a pretrained tokeniser like BERT's WordPiece for transformer models. For the transformer approach you'd get token IDs and attention masks directly. I'd also handle class imbalance at this stage using oversampling or class weights.",
+      "score": 8,
+      "feedback": "Good comprehensive pipeline covering both classical and modern approaches. The candidate showed awareness of different methodologies appropriate to different model choices.",
+      "strengths": "Distinguished between classical ML and transformer-based approaches, which shows depth.",
+      "improvement": "Could mention handling out-of-vocabulary tokens or data augmentation techniques for low-resource scenarios."
+    },
+    {
+      "question_id": 4,
+      "question": "Tell me about a time you had to debug a model that wasn't performing as expected. What steps did you take?",
+      "category": "Behavioral",
+      "focus": "Problem-solving, debugging mindset",
+      "answer": "During my final year project I built a sentiment classifier that had 90% accuracy on the training set but only 62% on the test set — a classic overfitting problem. I first checked if the train/test split was stratified, it was. Then I plotted the learning curves and saw the training loss kept going down but validation loss started increasing after epoch 5. I tried adding dropout layers and L2 regularisation but it only helped a little. Eventually I found that my dataset had a label leakage issue — some reviews had the star rating embedded in the text itself, which the model was exploiting. I fixed this by removing that information from the text and accuracy on the test set improved to 81%.",
+      "score": 7,
+      "feedback": "Good structured response following the STAR format. The candidate showed systematic debugging methodology and identified a subtle but important data leakage issue.",
+      "strengths": "Used learning curves, identified root cause, and described a concrete resolution.",
+      "improvement": "Could have quantified the final business impact or mentioned what they learned for future projects."
+    },
+    {
+      "question_id": 5,
+      "question": "Describe a project where you had to learn a new tool or framework under time pressure. How did you manage it?",
+      "category": "Behavioral",
+      "focus": "Adaptability, learning agility",
+      "answer": "In my internship we had a project deadline in two weeks and the team decided to use Hugging Face Transformers, which I'd never used before. I spent the first evening going through the official documentation and ran through two of their example notebooks. I also found a YouTube tutorial series that covered fine-tuning BERT. By day two I had a working prototype. I focused on just what I needed — fine-tuning a classification head — rather than understanding every part of the library. I asked a senior engineer to review my code before submitting. We delivered on time.",
+      "score": 7,
+      "feedback": "Good answer demonstrating initiative and resourcefulness under pressure. The candidate showed a pragmatic approach to learning by focusing on what was immediately needed.",
+      "strengths": "Specific example, showed good judgment about what to learn vs. defer, asked for help when needed.",
+      "improvement": "Could have mentioned how this experience changed their approach to learning new tools in the future."
+    },
+    {
+      "question_id": 6,
+      "question": "Imagine you're given a dataset of customer support tickets and asked to build a model that automatically categorises them. You have one week. Walk me through your approach from data exploration to deployment.",
+      "category": "Situational",
+      "focus": "End-to-end ML project planning",
+      "answer": "Day 1 — data exploration. I'd look at the class distribution, check for duplicates, look at ticket lengths, and understand what categories exist and how balanced they are. Day 2 — baseline. I'd start with a simple TF-IDF plus logistic regression model just to get a baseline score quickly. Day 3–4 — I'd try fine-tuning a small pretrained model like distilBERT which should give much better results. Day 5 — evaluation. I'd look at per-class precision, recall, and F1, and build a confusion matrix to see where it fails most. Day 6 — deployment. I'd wrap the model in a simple FastAPI endpoint and containerise it with Docker. Day 7 — documentation and handoff. I'd also set up basic monitoring to track prediction confidence over time.",
+      "score": 6,
+      "feedback": "Solid structured plan showing good awareness of the full ML lifecycle. The timeline is realistic and the technology choices are sensible.",
+      "strengths": "Mentioned baseline-first approach, per-class evaluation, and monitoring — all best practices.",
+      "improvement": "Did not address data labelling quality issues or how to handle edge cases like tickets that span multiple categories."
+    },
+    {
+      "question_id": 7,
+      "question": "Why do you want to work as a Machine Learning Engineer specifically, and what area of ML excites you the most right now?",
+      "category": "Motivation",
+      "focus": "Career alignment, passion",
+      "answer": "I find it genuinely exciting that you can write a programme that learns from data rather than explicit rules — it feels like a fundamentally different way of building software. I enjoy the mix of mathematics, engineering, and problem-solving that ML requires. Right now I'm most excited about large language models and how they're being applied to real business problems. I've been experimenting with building small RAG systems using open-source models on my laptop and I find the whole pipeline — retrieval, generation, evaluation — really interesting. I want to be in a role where I'm building these systems at production scale and learning from engineers who've done it before.",
+      "score": 8,
+      "feedback": "Genuine, well-articulated motivation. The candidate goes beyond vague enthusiasm and mentions concrete hands-on experience and a specific technical area they're exploring.",
+      "strengths": "Specific technical interest, hands-on experimentation, clear alignment between their interests and the role.",
+      "improvement": "Could tie their excitement about LLMs more explicitly to the company's products or mission."
+    }
+  ],
+  "evaluation": {
+    "overall_score": 72.0,
+    "recommendation": "RECOMMEND",
+    "technical_assessment": "Priya demonstrated solid theoretical foundations across core ML concepts, deep learning, and NLP. Her answers showed she can connect theory to practical applications and is familiar with both classical and modern transformer-based approaches. There are minor gaps in handling edge cases and broader knowledge of regularisation techniques.",
+    "communication_assessment": "Priya communicated clearly and concisely throughout. Her behavioral answers were well-structured and specific, and she used concrete examples effectively without being verbose.",
+    "strengths": [
+      "Strong grasp of supervised vs. unsupervised learning with relevant real-world examples",
+      "Systematic debugging mindset — identified data leakage in a previous project through methodical investigation",
+      "Awareness of full ML lifecycle from data exploration to monitoring in production"
+    ],
+    "gaps": [
+      "Limited experience handling multi-label classification and ambiguous data scenarios",
+      "Behavioral answers could more clearly articulate lessons learned and their long-term impact"
+    ],
+    "summary": "Priya is a strong junior candidate with solid ML fundamentals and a genuine interest in applied LLMs. She demonstrates good debugging habits, a pragmatic learning style, and awareness of production ML concerns like monitoring. While she has some gaps in advanced topics and edge-case handling, these are expected at the junior level and she has clear potential for rapid growth. She would benefit from mentorship on production-scale systems.",
+    "next_steps": "Proceed to a take-home technical assessment focused on a real NLP classification task, then schedule a live coding round."
+  }
+}
