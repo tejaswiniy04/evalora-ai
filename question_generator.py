@@ -1,16 +1,18 @@
 """
-question_generator.py — Role-Specific Interview Question Generator
-
-Generates 7 structured questions per session:
-  - 3 Technical  (skill-specific knowledge & problem-solving)
-  - 2 Behavioral (STAR-format real-experience questions)
-  - 1 Situational (hypothetical scenario)
-  - 1 Motivation  (career fit & goals)
+question_generator.py — Role-Specific Interview Question & Skills Generator
+=============================================================================
+Generates:
+  1. Top skills auto-suggested for custom job roles via Groq AI
+  2. 7 structured questions per session:
+     - 3 Technical  (skill-specific knowledge & problem-solving)
+     - 2 Behavioral (STAR-format real-experience questions)
+     - 1 Situational (hypothetical scenario)
+     - 1 Motivation  (career fit & goals)
 """
 
-import os
 import json
 import logging
+import os
 import re
 import time
 
@@ -19,6 +21,44 @@ logger = logging.getLogger(__name__)
 SYSTEM_PROMPT = """You are a senior technical interviewer at a top tech company.
 Your job is to generate structured, role-specific interview questions.
 You must return ONLY valid JSON — no markdown, no explanation, no extra text."""
+
+
+def generate_skills_for_role(role: str, client) -> list[str]:
+    """
+    Use Groq AI to suggest the top 4-5 relevant skills for any custom job title.
+
+    Args:
+        role: Job title string (e.g. "DevOps Engineer").
+        client: Initialized Groq client.
+
+    Returns:
+        List of skill strings (e.g. ["Docker", "Kubernetes", "CI/CD", "Terraform", "Linux"]).
+    """
+    if not role or not role.strip():
+        return ["Python", "Problem Solving", "Communication", "System Design"]
+
+    user_prompt = f"""Suggest the top 4 to 5 core technical or professional skills required for the job role: "{role.strip()}".
+Return ONLY a JSON array of strings representing the skills. Example: ["Skill 1", "Skill 2", "Skill 3", "Skill 4"].
+No markdown fences, no extra text."""
+
+    try:
+        response = client.chat.completions.create(
+            model=os.getenv("LLM_MODEL", "llama-3.1-8b-instant"),
+            messages=[
+                {"role": "system", "content": "You are an expert HR and Technical Recruiting Specialist. Return ONLY valid JSON arrays of skill strings."},
+                {"role": "user", "content": user_prompt},
+            ],
+            temperature=0.5,
+            max_tokens=150,
+        )
+        content = response.choices[0].message.content.strip()
+        parsed = _parse_json_response(content)
+        if isinstance(parsed, list) and len(parsed) > 0:
+            return [str(s).strip() for s in parsed if str(s).strip()]
+    except Exception as e:
+        logger.warning(f"Failed to generate skills via Groq AI for role '{role}': {e}")
+
+    return ["Python", "Problem Solving", "Communication", "System Design"]
 
 
 def generate_questions(role: str, skills: list[str], client) -> list[dict]:
@@ -46,11 +86,11 @@ Return a JSON array of exactly 7 objects. Each object must have:
   "focus"    : the skill or competency being tested (short phrase)
 
 Rules:
-  - Questions 1–3: Technical (test {skills_str} specifically)
+  - Questions 1–3: Technical (test {skills_str} specifically for the role "{role}")
   - Questions 4–5: Behavioral (STAR format — "Tell me about a time...")
-  - Question  6:   Situational ("Imagine you are..." — a realistic problem scenario)
+  - Question  6:   Situational ("Imagine you are..." — a realistic problem scenario for "{role}")
   - Question  7:   Motivation ("Why..." — career goals and role fit)
-  - Each question must be unique, clear, and appropriate for the role level.
+  - Each question must be unique, clear, highly relevant to "{role}", and test {skills_str}.
 
 Return ONLY the JSON array. No markdown fences, no explanation."""
 

@@ -23,7 +23,7 @@ from auth import authenticate_user, register_user
 from email_notifier import send_interview_result_notification
 from evaluator import generate_evaluation
 from pdf_generator import generate_pdf_report
-from question_generator import generate_questions
+from question_generator import generate_questions, generate_skills_for_role
 from session import InterviewSession
 from transcriber import SUPPORTED_LANGUAGES, transcribe_audio
 
@@ -191,6 +191,12 @@ def init_session_state():
         st.session_state.role = ""
     if "skills" not in st.session_state:
         st.session_state.skills = []
+    if "selected_role_state" not in st.session_state:
+        st.session_state.selected_role_state = PREDEFINED_ROLES[0]["role"]
+    if "skills_input_state" not in st.session_state:
+        st.session_state.skills_input_state = ", ".join(PREDEFINED_ROLES[0]["skills"])
+    if "last_role_choice" not in st.session_state:
+        st.session_state.last_role_choice = None
     if "current_q_idx" not in st.session_state:
         st.session_state.current_q_idx = 0
     if "questions" not in st.session_state:
@@ -326,27 +332,54 @@ if st.session_state.step == "setup":
 
         # Job Role Selection
         role_options = [r["role"] for r in PREDEFINED_ROLES] + ["Custom Role"]
+
+        current_idx = 0
+        if st.session_state.selected_role_state in role_options:
+            current_idx = role_options.index(st.session_state.selected_role_state)
+
         selected_role_option = st.selectbox(
             "Select Job Role",
             options=role_options,
-            index=0,
+            index=current_idx,
             help="Choose from predefined roles or specify a custom role"
         )
 
+        # Handle Role Selection Changes dynamically
+        if selected_role_option != st.session_state.last_role_choice:
+            st.session_state.last_role_choice = selected_role_option
+            st.session_state.selected_role_state = selected_role_option
+            if selected_role_option != "Custom Role":
+                match = next(r for r in PREDEFINED_ROLES if r["role"] == selected_role_option)
+                st.session_state.skills_input_state = ", ".join(match["skills"])
+                st.rerun()
+
         if selected_role_option == "Custom Role":
-            final_role = st.text_input("Custom Role Title", value="Senior Data Engineer")
-            default_skills_list = ["Python", "SQL", "Spark", "Docker"]
+            custom_title = st.text_input(
+                "Custom Role Title",
+                value=st.session_state.get("custom_role_title_val", "Senior Data Engineer"),
+                help="Type any custom job role title (e.g. Cybersecurity Specialist, Cloud Architect)"
+            )
+            st.session_state.custom_role_title_val = custom_title
+            final_role = custom_title.strip() if custom_title.strip() else "Custom Role"
+
+            if st.button("🤖 Suggest Skills with AI", use_container_width=True, help="Auto-generate core skills using Groq AI"):
+                client = get_groq_client(api_key)
+                if client:
+                    with st.spinner(f"AI generating skills for **{final_role}**..."):
+                        ai_skills = generate_skills_for_role(final_role, client)
+                        st.session_state.skills_input_state = ", ".join(ai_skills)
+                        st.success(f"✓ AI suggested skills for {final_role}!")
+                        st.rerun()
         else:
             final_role = selected_role_option
-            match = next(r for r in PREDEFINED_ROLES if r["role"] == selected_role_option)
-            default_skills_list = match["skills"]
 
     with col2:
         skills_str = st.text_input(
             "Required Skills (comma-separated)",
-            value=", ".join(default_skills_list),
+            value=st.session_state.skills_input_state,
             help="Specify skills to test in the interview"
         )
+        st.session_state.skills_input_state = skills_str
         parsed_skills = [s.strip() for s in skills_str.split(",") if s.strip()]
 
         st.info(f"**Selected Role:** {final_role}\n\n**Skills:** {', '.join(parsed_skills)}")
