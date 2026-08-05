@@ -1226,7 +1226,17 @@ elif st.session_state.step == "evaluation":
 
     # 4. Glassmorphic Executive Summary & Next Steps
     summary_text = eval_data.get("summary", "N/A")
-    next_steps_text = eval_data.get("next_steps", "N/A")
+    raw_next_steps = str(eval_data.get("next_steps", "")).strip()
+
+    if not raw_next_steps or raw_next_steps.lower() in ["pass", "n/a", "none"]:
+        if "RECOMMEND" in rec_upper and "NOT" not in rec_upper:
+            next_steps_text = "Proceed candidate to the next round of technical / culture-fit interviews."
+        else:
+            next_steps_text = "Do not proceed with further interview rounds for this candidate (Pass). Archive profile for future openings."
+    elif len(raw_next_steps) < 15 and raw_next_steps.lower().startswith("pass"):
+        next_steps_text = "Do not proceed with further interview rounds for this candidate (Pass). Archive profile for future openings."
+    else:
+        next_steps_text = raw_next_steps
 
     render_html(f"""
     <div style="background:#ffffff; border:1px solid #e2e8f0; border-radius:18px; box-shadow:0 8px 30px rgba(0,0,0,0.03); padding:1.6rem; margin-bottom:1.5rem;">
@@ -1240,23 +1250,60 @@ elif st.session_state.step == "evaluation":
         <h4 style="margin:0 0 0.8rem 0; font-family:Outfit,sans-serif; color:#0369a1; font-size:1.15rem; display:flex; align-items:center; gap:8px;">
             👉 Recommended Next Steps
         </h4>
-        <div style="color:#0c4a6e; font-size:0.95rem; line-height:1.65;">{next_steps_text}</div>
+        <div style="color:#0c4a6e; font-size:0.95rem; line-height:1.65; font-weight:500;">{next_steps_text}</div>
     </div>
     """)
 
-    st.divider()
+    # 5. Attractive Glassmorphic PDF Download Hero Card
+    st.markdown("""
+    <style>
+        div.stDownloadButton > button {
+            background: linear-gradient(135deg, #4f46e5 0%, #6366f1 100%) !important;
+            color: #ffffff !important;
+            font-family: 'Outfit', sans-serif !important;
+            font-weight: 700 !important;
+            font-size: 1.05rem !important;
+            padding: 0.9rem 2rem !important;
+            border-radius: 14px !important;
+            border: none !important;
+            box-shadow: 0 10px 25px rgba(79, 70, 229, 0.35) !important;
+            transition: all 0.3s cubic-bezier(.22,.61,.36,1) !important;
+            width: 100% !important;
+        }
+        div.stDownloadButton > button:hover {
+            background: linear-gradient(135deg, #4338ca 0%, #4f46e5 100%) !important;
+            box-shadow: 0 14px 35px rgba(79, 70, 229, 0.5) !important;
+            transform: translateY(-2px) !important;
+            color: #ffffff !important;
+        }
+    </style>
+    """, unsafe_allow_html=True)
 
-    # Download Section (PDF only)
-    st.subheader("📥 Export & Download Results")
+    render_html(f"""
+    <div style="background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%); border: 1px solid #cbd5e1; border-radius: 20px; padding: 2rem; text-align: center; box-shadow: 0 10px 35px rgba(100, 110, 140, 0.08); margin-bottom: 1.5rem;">
+        <div style="font-size: 2.6rem; margin-bottom: 0.4rem;">📄</div>
+        <div style="font-family: Outfit, sans-serif; font-size: 1.35rem; font-weight: 800; color: #1e293b; margin-bottom: 0.3rem;">
+            Export Candidate Evaluation Report
+        </div>
+        <div style="font-size: 0.88rem; color: #64748b; margin-bottom: 1.2rem; max-width: 520px; margin-left: auto; margin-right: auto;">
+            Download the official 2-page PDF evaluation report containing full question breakdown, scores, strengths, and hire recommendation.
+        </div>
+        <div style="display: flex; justify-content: center; gap: 0.8rem; margin-bottom: 1rem;">
+            <span style="background: #e0e7ff; color: #4338ca; font-size: 0.75rem; font-weight: 700; padding: 4px 12px; border-radius: 20px;">PDF Format</span>
+            <span style="background: #dcfce7; color: #15803d; font-size: 0.75rem; font-weight: 700; padding: 4px 12px; border-radius: 20px;">2 Pages</span>
+            <span style="background: #f3e8ff; color: #6b21a8; font-size: 0.75rem; font-weight: 700; padding: 4px 12px; border-radius: 20px;">Verified Score</span>
+        </div>
+    </div>
+    """)
+
     try:
         pdf_bytes = generate_pdf_report(session)
         safe_uname = re.sub(r"[^\w\-]", "_", session.candidate_name.lower().replace(" ", "_")) or "usersname"
         st.download_button(
-            label="📄 Download Evaluation Report (PDF)",
+            label="⬇️ Download Official PDF Report",
             data=pdf_bytes,
-            file_name=f"{safe_uname}.pdf",
+            file_name=f"{safe_uname}_Evaluation_Report.pdf",
             mime="application/pdf",
-            type="primary",
             use_container_width=True
         )
     except Exception as pdf_err:

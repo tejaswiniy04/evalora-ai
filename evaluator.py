@@ -81,7 +81,7 @@ Return ONLY this JSON (no markdown):
     "<specific gap 2>"
   ],
   "summary":    "<3–4 sentence executive summary of the candidate>",
-  "next_steps": "<concrete recommended next action e.g. 'Proceed to technical round' or 'Pass'>"
+  "next_steps": "<1–2 sentences of clear, actionable next steps e.g. 'Reject application and archive candidate profile for future openings', or 'Schedule follow-up System Design interview'>"
 }}"""
 
     response = client.chat.completions.create(
