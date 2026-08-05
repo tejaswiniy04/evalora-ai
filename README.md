@@ -1,113 +1,104 @@
-# 🎯 Evalora AI
+﻿# 🎯 Evalora AI
 ### AI-Powered Structured Interview & Evaluation Agent
 
-An AI-powered structured interview system that generates role-specific questions,
-scores each answer in real time, and produces a comprehensive evaluation report
-with strengths, gaps, and a hire recommendation.
+**Evalora AI** is an end-to-end AI interview platform that generates role-specific questions,
+scores each answer in real time, produces a comprehensive PDF evaluation report,
+and automatically emails results — all through a sleek Streamlit web interface.
 
 ---
 
-## Demo (no API key needed)
-
-**Windows (PowerShell):**
-```powershell
-$env:PYTHONUTF8=1; python agent.py --demo
-```
-
-**macOS / Linux:**
-```bash
-python agent.py --demo
-```
-
-This replays a pre-run interview transcript of a Junior ML Engineer candidate
-with all scores and the final evaluation — no setup required.
-
----
-
-## Features
+## ✨ Features
 
 | Feature | Details |
 |---|---|
-| User Authentication | Secure Sign In & Sign Up system (`auth.py`) with persistent accounts (`users.json`) |
-| Web Application | Modern Streamlit Web Dashboard UI (`app.py`) for browser-based interviews |
-| Voice Answering | Speech-to-Text microphone recording using Groq Whisper API (`whisper-large-v3`) |
-| PDF Export | Styled 2-page candidate evaluation PDF report generator (`pdf_generator.py`) |
-| Question generation | 7 role-specific questions (Technical × 3, Behavioral × 2, Situational × 1, Motivation × 1) |
-| Live answer scoring | Each answer scored 1–10 with feedback immediately after submission |
-| Weighted evaluation | Final score = 40% Technical + 25% Behavioral + 20% Situational + 15% Motivation |
-| Recommendation tier | STRONGLY RECOMMEND / RECOMMEND / BORDERLINE / DO NOT RECOMMEND |
-| Output | PDF Evaluation Report download directly from Web UI |
-| UI | Streamlit Web App & Rich terminal — colour-coded scores, progress tables |
-| Demo mode | Replay pre-run transcript without any API key |
+| **User Authentication** | Secure Sign In & Sign Up with persistent accounts stored in `users.json` |
+| **Web Application** | Premium light-themed Streamlit dashboard (`app.py`) with glassmorphism header |
+| **Voice Answering** | Speech-to-Text microphone recording via Groq **Whisper (`whisper-large-v3`)** |
+| **PDF Export** | Styled 2-page candidate evaluation PDF report via `fpdf2` |
+| **Email Notifications** | Auto-email interview results to both the admin and the candidate via Gmail SMTP |
+| **Question Generation** | 7 role-specific questions: Technical × 3, Behavioral × 2, Situational × 1, Motivation × 1 |
+| **Live Answer Scoring** | Each answer scored 1–10 with instant feedback card (strengths + improvement) |
+| **Animated Score Card** | Score feedback card with entrance animations, score pill, and two-column grid |
+| **Weighted Final Score** | `40% Technical + 25% Behavioral + 20% Situational + 15% Motivation` |
+| **Recommendation Tier** | STRONGLY RECOMMEND / RECOMMEND / BORDERLINE / DO NOT RECOMMEND |
+| **10 Predefined Roles** | Software Engineer, ML Engineer, Data Scientist, DevOps, Product Manager, and more |
+| **Custom Role Support** | Enter any job title + skills to generate a fully tailored interview |
+| **Transcript Saving** | Each session auto-saved as a JSON transcript in `transcripts/` |
+| **Demo Mode** | Replay a pre-run Junior ML Engineer transcript — no API key required |
 
 ---
 
-## 🌐 Web Application & Deployment
+## 🌐 Web Application
 
-### Run Web App Locally
+### Run Locally
 ```bash
+# Activate virtual environment first
+.\venv\Scripts\activate          # Windows
+source venv/bin/activate         # macOS / Linux
+
+# Then start the app
 streamlit run app.py
 ```
-*(Or on Windows, simply double-click `run.bat` or run `run.bat --web`)*
 
-This opens the interactive Web Dashboard in your browser at `http://localhost:8501`.
+Opens at **http://localhost:8501** (or the port shown in the terminal).
 
-### 🚀 Deploying to Cloud (Streamlit Community Cloud / Hugging Face / Render)
+### 🚀 Deploy to Cloud
 
-#### Option 1: Streamlit Community Cloud (Free 1-Click Deployment)
-1. Push your repository to **GitHub**.
-2. Visit **[share.streamlit.io](https://share.streamlit.io)** and log in with GitHub.
-3. Click **New app**, select your repository, branch (`main`), and set Main file path to `app.py`.
-4. Under **Advanced Settings**, add your environment secret:
-   ```env
-   GROQ_API_KEY=gsk_xxxxxxxxxxxxxxxxxxxx
+#### Option 1 — Streamlit Community Cloud (Recommended, Free)
+1. Push this repo to **GitHub**.
+2. Visit [share.streamlit.io](https://share.streamlit.io) → **New app**.
+3. Select your repo, branch `main`, and set **Main file path** to `app.py`.
+4. Under **Advanced Settings → Secrets**, add:
+   ```toml
+   GROQ_API_KEY = "gsk_xxxxxxxxxxxxxxxxxxxx"
+   GMAIL_USER = "your_sender@gmail.com"
+   GMAIL_APP_PASSWORD = "xxxx xxxx xxxx xxxx"
+   ADMIN_EMAIL = "admin@yourdomain.com"
    ```
-5. Click **Deploy!** Your app will be live on a public URL in seconds.
+5. Click **Deploy!** — your app is live in seconds.
 
-#### Option 2: Hugging Face Spaces (Free Docker/Streamlit Host)
-1. Create a new Space on [huggingface.co/spaces](https://huggingface.co/spaces).
-2. Choose **Streamlit** SDK.
-3. Upload `app.py`, `requirements.txt`, and modules, or link to your Git repository.
-4. Add `GROQ_API_KEY` under **Repository Secrets**.
+#### Option 2 — Hugging Face Spaces
+1. Create a new Space → choose **Streamlit** SDK.
+2. Upload all project files or connect your GitHub repo.
+3. Add secrets under **Repository Secrets**.
 
-#### Option 3: Render / Railway / Docker
-Use standard Python command:
+#### Option 3 — Render / Railway / Docker
 ```bash
 streamlit run app.py --server.port $PORT --server.address 0.0.0.0
 ```
 
 ---
 
-## Setup
+## ⚙️ Setup
 
-### 1. Prerequisites
-- Python 3.10 or higher
-- A free [Groq API key](https://console.groq.com) *(takes ~2 minutes to get)*
+### Prerequisites
+- Python **3.10+**
+- A free [Groq API key](https://console.groq.com) *(~2 min to get)*
+- Gmail account with an [App Password](https://myaccount.google.com/apppasswords) *(for email notifications)*
 
-### 2. Clone or download
+### 1. Clone the repository
 ```bash
-git clone https://github.com/YOUR_USERNAME/rooman-interview-agent.git
-cd rooman-interview-agent
+git clone https://github.com/tejaswiniy04/evalora-ai.git
+cd evalora-ai
 ```
 
-### 3. Create a virtual environment
+### 2. Create a virtual environment
 ```bash
-# Windows — create venv using the Python found in your system
-"D:\Projects\GenAI- Pricing Simulator\python_version\.venv\Scripts\python.exe" -m venv venv
+# Windows
+python -m venv venv
+.\venv\Scripts\activate
 
 # macOS / Linux
 python3 -m venv venv
+source venv/bin/activate
 ```
 
-> **Windows tip:** If `python` is not found, use the full path to any Python 3.10+ exe you have.
-> On this machine the correct command is shown above.
-
-### 4. Install dependencies
+### 3. Install dependencies
 ```bash
 pip install -r requirements.txt
 ```
 
-### 5. Configure your API key
+### 4. Configure environment variables
 ```bash
 # Windows
 copy .env.example .env
@@ -116,20 +107,19 @@ copy .env.example .env
 cp .env.example .env
 ```
 
-Open `.env` and replace `your_groq_api_key_here` with your actual Groq key:
-```
+Edit `.env` and fill in your values:
+```env
 GROQ_API_KEY=gsk_xxxxxxxxxxxxxxxxxxxx
+GMAIL_USER=your_sender@gmail.com
+GMAIL_APP_PASSWORD=xxxx xxxx xxxx xxxx
+ADMIN_EMAIL=admin@yourdomain.com
 ```
 
 ---
 
-### Easiest — use the batch launcher (Windows only)
-```bat
-run.bat --demo    # demo mode, no API key needed
-run.bat --live    # interactive interview
-```
+## 🖥️ CLI Usage (Terminal Mode)
 
-### Interactive interview (fully live)
+### Interactive interview
 ```powershell
 # Windows (PowerShell)
 $env:PYTHONUTF8=1; .\venv\Scripts\python.exe agent.py
@@ -137,100 +127,74 @@ $env:PYTHONUTF8=1; .\venv\Scripts\python.exe agent.py
 # macOS / Linux
 python agent.py
 ```
-You will be prompted for:
-- Candidate name
-- Role selection (Pick from 10 pre-configured job roles by typing option number `1–10`, or option `11` for a custom role)
-- Required skills (Pre-populated default skills for each role; press Enter to accept or customize)
 
-Then answer each of the 7 questions. Press **Enter twice** to submit each answer.
+You will be prompted for candidate name, role (1–10 from predefined list or option 11 for custom), and skills.
+Answer each of the 7 questions. Press **Enter twice** to submit each answer.
 
-### Pre-fill role and skills via flags
-```powershell
-# Windows
-$env:PYTHONUTF8=1; .\venv\Scripts\python.exe agent.py --role "Data Scientist" --skills "Python,SQL,Statistics" --name "Alice"
-
-# macOS / Linux
+### Pre-fill via flags
+```bash
 python agent.py --role "Data Scientist" --skills "Python,SQL,Statistics" --name "Alice"
 ```
 
-### Demo mode (no API key, no typing)
-```bash
+### Demo mode (no API key needed)
+```powershell
+# Windows
+$env:PYTHONUTF8=1; python agent.py --demo
+
+# macOS / Linux
 python agent.py --demo
 ```
-Replays `sample_transcripts/sample_interview.json` — a realistic Junior ML Engineer
-interview with all answers, scores, and final evaluation pre-computed.
+Replays `sample_transcripts/sample_interview.json` — a realistic Junior ML Engineer interview with scores and evaluation.
 
 ---
 
-## Sample Inputs & Outputs
-
-### Example 1 — Junior ML Engineer (interactive)
-```
-Role:   Junior ML Engineer
-Skills: Python, Machine Learning, NLP, PyTorch, SQL
-```
-
-**Sample question generated:**
-> *"What is the vanishing gradient problem in deep neural networks, and how can it be mitigated?"*
-
-**Sample answer:**
-> *"The vanishing gradient problem happens when gradients become very small as they are backpropagated through many layers…"*
-
-**Score output:**
-```
-Score: 8/10  ████████░░  Strong
-
-Feedback:    Strong answer demonstrating solid deep learning fundamentals.
-✓ Strength:  Covered three distinct solutions with clear explanations.
-→ Improve:   Mentioning gradient clipping would have made it more complete.
-```
-
-### Final Evaluation (excerpt from sample transcript)
-```
-╭──────────────────────────────────────────╮
-│ Candidate   Priya Sharma                 │
-│ Role        Junior ML Engineer           │
-│ Score       72 / 100                     │
-│ Decision    ✅ RECOMMEND                  │
-╰──────────────────────────────────────────╯
-
-Strengths:
-  ✓ Strong grasp of supervised vs. unsupervised learning
-  ✓ Systematic debugging mindset
-  ✓ Awareness of full ML lifecycle
-
-Gaps:
-  ✗ Limited experience with multi-label classification
-  ✗ Behavioral answers lacked explicit lessons-learned
-```
-
-Full transcript: [`sample_transcripts/sample_interview.json`](sample_transcripts/sample_interview.json)
-
----
-
-## Project Structure
+## 📁 Project Structure
 
 ```
-rooman-interview-agent/
-├── agent.py                         # Entry point — orchestrates the full interview
-├── question_generator.py            # LLM-powered question generation (7 per session)
-├── answer_scorer.py                 # LLM-based per-answer scoring (1–10)
-├── evaluator.py                     # Final evaluation report generator
-├── session.py                       # Session state + JSON transcript persistence
-├── requirements.txt                 # Pinned dependencies
-├── .env.example                     # Environment variable template
+evalora-ai/
+├── app.py                     # Streamlit Web Application — main entry point
+├── agent.py                   # CLI entry point — terminal interview orchestrator
+├── answer_scorer.py           # LLM-based per-answer scoring (1–10 + feedback)
+├── auth.py                    # User authentication (sign up / sign in)
+├── email_notifier.py          # Gmail SMTP email notifications (admin + candidate)
+├── evaluator.py               # Final weighted evaluation report generator
+├── pdf_generator.py           # Styled 2-page PDF report builder (fpdf2)
+├── question_generator.py      # LLM-powered question generation (7 per session)
+├── session.py                 # Session state + JSON transcript persistence
+├── transcriber.py             # Groq Whisper audio transcription (voice answers)
+├── run.bat                    # Windows batch launcher (--demo / --live / --web)
+├── requirements.txt           # Pinned Python dependencies
+├── .env.example               # Environment variable template
+├── users.json                 # Persistent user account store (auto-created)
 ├── sample_transcripts/
-│   └── sample_interview.json        # Pre-run demo transcript
-└── transcripts/                     # Auto-created — live session transcripts saved here
+│   └── sample_interview.json  # Pre-run demo transcript (Junior ML Engineer)
+└── transcripts/               # Auto-created — live session transcripts saved here
 ```
 
 ---
 
-## Scoring Method
+## 🧠 Predefined Job Roles
+
+| # | Role | Key Skills |
+|---|---|---|
+| 1 | Software Engineer | Python, Java, Data Structures, System Design |
+| 2 | Frontend Developer | JavaScript, React, HTML/CSS, TypeScript |
+| 3 | Backend Engineer | Python, FastAPI, PostgreSQL, Redis, Docker |
+| 4 | Full Stack Developer | JavaScript, Node.js, React, MongoDB |
+| 5 | Data Scientist | Python, SQL, Machine Learning, Pandas, Statistics |
+| 6 | Machine Learning Engineer | Python, PyTorch, Deep Learning, MLOps, NLP |
+| 7 | Data Engineer | Python, SQL, Apache Spark, Airflow, BigQuery |
+| 8 | DevOps / Cloud Engineer | Docker, Kubernetes, AWS, CI/CD, Terraform |
+| 9 | Cybersecurity Analyst | Network Security, Python, Penetration Testing, SIEM |
+| 10 | Product Manager | Product Strategy, Agile, User Research, Data Analytics |
+
+Or type any custom role + skills for a fully tailored interview.
+
+---
+
+## 📊 Scoring Method
 
 ### Per-Answer Score (1–10)
-
-Each answer is scored by the LLM on criteria appropriate to its category:
 
 | Category | Scoring Criteria |
 |---|---|
@@ -241,101 +205,86 @@ Each answer is scored by the LLM on criteria appropriate to its category:
 
 **Score bands:**
 
-| Score | Label |
-|---|---|
-| 9–10 | Exceptional |
-| 7–8  | Strong |
-| 5–6  | Adequate |
-| 3–4  | Weak |
-| 1–2  | Inadequate |
+| Score | Label | Card Color |
+|---|---|---|
+| 8–10 | Excellent | 🟢 Green |
+| 6–7 | Good | 🟡 Amber |
+| 1–5 | Needs Work | 🔴 Red |
 
 ### Final Score (out of 100)
 
 ```
-Final = (avg_Technical × 0.40)
-      + (avg_Behavioral × 0.25)
-      + (avg_Situational × 0.20)
-      + (avg_Motivation × 0.15)
-      × 10
+Final = (avg_Technical  × 0.40
+       + avg_Behavioral × 0.25
+       + avg_Situational × 0.20
+       + avg_Motivation  × 0.15) × 10
 ```
-
-Technical questions are weighted highest because they directly assess the core
-skills required for the role. Motivation is weighted least — it provides signal
-but is not a strong predictor of performance.
 
 ### Recommendation Tiers
 
 | Score | Recommendation |
 |---|---|
-| 80–100 | STRONGLY RECOMMEND |
-| 65–79  | RECOMMEND |
-| 50–64  | BORDERLINE |
-| 0–49   | DO NOT RECOMMEND |
+| 80–100 | ✅ STRONGLY RECOMMEND |
+| 65–79  | ✅ RECOMMEND |
+| 50–64  | ⚠️ BORDERLINE |
+| 0–49   | ❌ DO NOT RECOMMEND |
 
 ---
 
-## Design Tradeoffs & Limitations
-
-### What I chose and why
-
-**LLM: Groq (`llama-3.1-8b-instant`)**
-- Free tier, no credit card required — reviewers can run immediately
-- Fast inference (~1–2 seconds per call), so the interview feels responsive
-- Tradeoff: smaller model occasionally produces less nuanced scoring than GPT-4. Switching to `llama-3.3-70b-versatile` (also free on Groq) gives noticeably better evaluation depth.
-
-**Question generation via LLM (vs. template bank)**
-- Fully dynamic — works for any role or skill set without pre-coding questions
-- Tradeoff: occasional JSON parse errors with very unusual roles. Mitigated with a robust `_parse_json_response()` fallback in every module.
-
-**Scoring by LLM (vs. embedding similarity)**
-- Embedding similarity can't evaluate reasoning quality or STAR structure
-- LLM scoring is more holistic but is subjective — two runs may differ slightly
-- Temperature is set to 0.3 for scoring (near-deterministic) to minimise variance
-
-**Weighted category scoring**
-- More honest than a flat average — a candidate who aces behavioural but fails technical shouldn't score the same as one who's strong across the board
-- Weights are opinionated; in a production system they'd be configurable per role
-
-**CLI-only (no web UI)**
-- Keeps setup friction near zero (one `pip install`, one `python agent.py`)
-- Tradeoff: less visual than a web UI; Rich library provides a reasonable terminal experience
-
-### Known limitations
-
-1. **No speech input** — answers must be typed. Adding `openai-whisper` or `groq/whisper-large-v3` would enable voice interviews.
-2. **Single-round only** — does not support follow-up questions or adaptive branching based on candidate answers.
-3. **No persistent candidate database** — each session is saved to a standalone JSON file; a real system would use a database with search.
-4. **English only** — the system prompt does not specify language; multilingual use is untested.
-5. **LLM dependency** — all intelligence depends on the Groq API being available. An Ollama (local) fallback would improve resilience.
-
-### What I'd improve with more time
-
-- Add a `--compare` mode to rank multiple transcripts against each other
-- Adaptive follow-up questions when a score is below 5
-- Web UI with a simple FastAPI backend + React frontend
-- SQLite database to persist candidates and enable search/filtering
-- Whisper integration for voice answers
-
----
-
-## Dependencies
+## 📦 Dependencies
 
 | Package | Version | Purpose |
 |---|---|---|
-| `groq` | 0.11.0 | Groq LLM API client |
+| `groq` | 1.6.0 | Groq LLM API + Whisper transcription |
 | `python-dotenv` | 1.0.1 | Load `.env` variables |
-| `rich` | 13.7.1 | Beautiful terminal UI |
+| `rich` | 13.7.1 | Terminal UI (CLI mode) |
+| `streamlit` | ≥ 1.30.0 | Web application framework |
+| `starlette` | < 0.40.0 | Streamlit compatibility pin |
+| `fpdf2` | ≥ 2.7.8 | PDF report generation |
 
 ---
 
-## Reproducibility Checklist
+## 🔁 Quick-Start Checklist
 
 | Step | Command |
 |---|---|
 | Install deps | `pip install -r requirements.txt` |
-| Copy env | `cp .env.example .env` (macOS/Linux) or `copy .env.example .env` (Windows) |
-| Add key | Edit `.env` → set `GROQ_API_KEY` |
-| Demo — Windows | `$env:PYTHONUTF8=1; python agent.py --demo` |
-| Demo — Mac/Linux | `python agent.py --demo` |
-| Live interview | `python agent.py` |
-| Custom role | `python agent.py --role "..." --skills "..."` |
+| Copy env | `cp .env.example .env` (macOS/Linux) / `copy .env.example .env` (Windows) |
+| Add Groq key | Edit `.env` → set `GROQ_API_KEY` |
+| Add email creds | Edit `.env` → set `GMAIL_USER`, `GMAIL_APP_PASSWORD`, `ADMIN_EMAIL` |
+| Run Web App | `streamlit run app.py` |
+| Demo (Windows) | `$env:PYTHONUTF8=1; python agent.py --demo` |
+| Demo (Mac/Linux) | `python agent.py --demo` |
+| Live CLI interview | `python agent.py` |
+
+---
+
+## ⚖️ Design Decisions & Tradeoffs
+
+**LLM: Groq (`llama-3.1-8b-instant`)**
+Free tier, no credit card required. ~1–2 s inference keeps the interview responsive.
+For better evaluation depth, switch to `llama-3.3-70b-versatile` (also free on Groq).
+
+**Dynamic question generation**
+Works for any role/skill set without pre-coded question banks. Mitigated JSON parse errors with robust fallback parsing in every module.
+
+**LLM scoring (vs. embedding similarity)**
+Embeddings cannot evaluate reasoning quality or STAR structure. Temperature set to 0.3 for near-deterministic scoring.
+
+**Weighted category scoring**
+More honest than a flat average — a strong behavioural score does not mask weak technical answers.
+
+---
+
+## Known Limitations
+
+1. **Single-round only** — no adaptive follow-up questions based on score.
+2. **English only** — multilingual interviews are untested.
+3. **No candidate database** — sessions are saved as standalone JSON files.
+4. **LLM dependency** — requires Groq API availability.
+
+---
+
+## 📄 License
+
+© 2025 Evalora AI. All rights reserved.
