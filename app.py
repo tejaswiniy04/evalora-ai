@@ -1128,55 +1128,121 @@ elif st.session_state.step == "evaluation":
     session = st.session_state.session_obj
 
     rec = eval_data.get("recommendation", "BORDERLINE")
-    rec_class = f"recommendation-{rec.replace(' ', '-')}"
     score_val = eval_data.get("overall_score", 0)
+
+    # Recommendation pill color logic
+    rec_upper = rec.upper()
+    if "STRONGLY" in rec_upper:
+        rec_color, rec_bg, rec_border = "#16a34a", "#dcfce7", "#86efac"
+    elif "RECOMMEND" in rec_upper and "NOT" not in rec_upper:
+        rec_color, rec_bg, rec_border = "#059669", "#d1fae5", "#6ee7b7"
+    elif "BORDERLINE" in rec_upper:
+        rec_color, rec_bg, rec_border = "#d97706", "#fef3c7", "#fde68a"
+    else:
+        rec_color, rec_bg, rec_border = "#dc2626", "#fee2e2", "#fca5a5"
+
+    c_name = session.candidate_name if session else "Candidate"
+    c_role = session.role if session else "Job Role"
+    q_count = len(session.qa_results) if session and session.qa_results else 0
+    s_count = len(session.skills) if session and session.skills else 0
 
     st.markdown("## 📊 Final Candidate Evaluation Report")
 
-    # Header Card
-    col1, col2, col3 = st.columns([1, 1, 1])
-    with col1:
-        st.metric("Candidate Name", session.candidate_name)
-        st.metric("Job Role", session.role)
-    with col2:
-        st.metric("Overall Score", f"{score_val} / 100")
-        st.markdown(f"**Hire Recommendation:**<br><div class='{rec_class}'>{rec}</div>", unsafe_allow_html=True)
-    with col3:
-        st.metric("Questions Answered", len(session.qa_results))
-        st.metric("Required Skills Tested", len(session.skills))
+    # 1. Glassmorphic Hero Summary Card
+    render_html(f"""
+    <div style="background:#ffffff; border:1px solid #e2e8f0; border-radius:20px; box-shadow:0 10px 30px rgba(100,110,140,0.06); padding:1.8rem; margin-bottom:1.8rem;">
+        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1.2rem;">
+            <div>
+                <div style="font-size:0.78rem; font-weight:700; color:#64748b; text-transform:uppercase; letter-spacing:0.05em;">Candidate Name</div>
+                <div style="font-size:1.6rem; font-weight:800; color:#1e293b; font-family:Outfit,sans-serif; margin-top:2px;">{c_name}</div>
+                <div style="font-size:0.88rem; color:#475569; margin-top:4px;">Target Role: <strong style="color:#1e293b;">{c_role}</strong></div>
+            </div>
+            <div style="display:flex; align-items:center; gap:1.2rem; flex-wrap:wrap;">
+                <div style="text-align:center; background:#f8fafc; border:1px solid #e2e8f0; border-radius:16px; padding:0.8rem 1.4rem;">
+                    <div style="font-size:0.75rem; font-weight:700; color:#64748b; text-transform:uppercase;">Overall Score</div>
+                    <div style="font-size:1.8rem; font-weight:800; color:#5e5ce6; font-family:Outfit,sans-serif;">{score_val}<span style="font-size:1rem; color:#94a3b8;">/100</span></div>
+                </div>
+                <div style="text-align:center; background:{rec_bg}; border:1px solid {rec_border}; border-radius:16px; padding:0.8rem 1.4rem;">
+                    <div style="font-size:0.75rem; font-weight:700; color:{rec_color}; text-transform:uppercase;">Hire Recommendation</div>
+                    <div style="font-size:1.05rem; font-weight:800; color:{rec_color}; font-family:Outfit,sans-serif; margin-top:3px;">{rec}</div>
+                </div>
+                <div style="text-align:center; background:#f8fafc; border:1px solid #e2e8f0; border-radius:16px; padding:0.8rem 1.2rem;">
+                    <div style="font-size:0.75rem; font-weight:700; color:#64748b; text-transform:uppercase;">Questions</div>
+                    <div style="font-size:1.5rem; font-weight:800; color:#1e293b; font-family:Outfit,sans-serif;">{q_count}</div>
+                </div>
+                <div style="text-align:center; background:#f8fafc; border:1px solid #e2e8f0; border-radius:16px; padding:0.8rem 1.2rem;">
+                    <div style="font-size:0.75rem; font-weight:700; color:#64748b; text-transform:uppercase;">Skills Tested</div>
+                    <div style="font-size:1.5rem; font-weight:800; color:#1e293b; font-family:Outfit,sans-serif;">{s_count}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    """)
 
-    st.divider()
+    # 2. Detailed Technical & Communication Glass Cards
+    render_html(f"""
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:1.5rem; margin-bottom:1.8rem;">
+        <div style="background:#ffffff; border:1px solid #e2e8f0; border-radius:18px; box-shadow:0 8px 30px rgba(0,0,0,0.03); padding:1.6rem; position:relative; overflow:hidden;">
+            <div style="position:absolute; top:0; left:0; right:0; height:4px; background:linear-gradient(90deg,#6366f1,#818cf8);"></div>
+            <h4 style="margin:0 0 0.8rem 0; font-family:Outfit,sans-serif; color:#1e293b; font-size:1.15rem; display:flex; align-items:center; gap:8px;">
+                💻 Technical Assessment
+            </h4>
+            <div style="color:#334155; font-size:0.95rem; line-height:1.65;">{eval_data.get('technical_assessment', 'N/A')}</div>
+        </div>
+        <div style="background:#ffffff; border:1px solid #e2e8f0; border-radius:18px; box-shadow:0 8px 30px rgba(0,0,0,0.03); padding:1.6rem; position:relative; overflow:hidden;">
+            <div style="position:absolute; top:0; left:0; right:0; height:4px; background:linear-gradient(90deg,#a855f7,#c084fc);"></div>
+            <h4 style="margin:0 0 0.8rem 0; font-family:Outfit,sans-serif; color:#1e293b; font-size:1.15rem; display:flex; align-items:center; gap:8px;">
+                💬 Communication Assessment
+            </h4>
+            <div style="color:#334155; font-size:0.95rem; line-height:1.65;">{eval_data.get('communication_assessment', 'N/A')}</div>
+        </div>
+    </div>
+    """)
 
-    # Detailed Assessments
-    c_tech, c_comm = st.columns(2)
-    with c_tech:
-        st.subheader("💻 Technical Assessment")
-        st.write(eval_data.get("technical_assessment", "N/A"))
-    with c_comm:
-        st.subheader("💬 Communication Assessment")
-        st.write(eval_data.get("communication_assessment", "N/A"))
+    # 3. Glassmorphic Strengths & Areas for Improvement Cards
+    strengths_items = "".join(f"<li style='margin-bottom:0.5rem;'>{s}</li>" for s in eval_data.get("strengths", [])) or "<li>N/A</li>"
+    gaps_items = "".join(f"<li style='margin-bottom:0.5rem;'>{g}</li>" for g in eval_data.get("gaps", [])) or "<li>N/A</li>"
 
-    st.divider()
+    render_html(f"""
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:1.5rem; margin-bottom:1.8rem;">
+        <div style="background:#f0fdf4; border:1px solid #bbf7d0; border-radius:18px; padding:1.6rem;">
+            <h4 style="margin:0 0 1rem 0; font-family:Outfit,sans-serif; color:#15803d; font-size:1.15rem; display:flex; align-items:center; gap:8px;">
+                ✅ Key Strengths
+            </h4>
+            <ul style="margin:0; padding-left:1.2rem; color:#166534; font-size:0.93rem; line-height:1.65;">
+                {strengths_items}
+            </ul>
+        </div>
+        <div style="background:#fffbeb; border:1px solid #fde68a; border-radius:18px; padding:1.6rem;">
+            <h4 style="margin:0 0 1rem 0; font-family:Outfit,sans-serif; color:#b45309; font-size:1.15rem; display:flex; align-items:center; gap:8px;">
+                ⚠️ Areas for Improvement
+            </h4>
+            <ul style="margin:0; padding-left:1.2rem; color:#92400e; font-size:0.93rem; line-height:1.65;">
+                {gaps_items}
+            </ul>
+        </div>
+    </div>
+    """)
 
-    # Strengths & Gaps
-    col_str, col_gap = st.columns(2)
-    with col_str:
-        st.subheader("✅ Key Strengths")
-        for s in eval_data.get("strengths", []):
-            st.markdown(f"- {s}")
-    with col_gap:
-        st.subheader("⚠️ Areas for Improvement")
-        for g in eval_data.get("gaps", []):
-            st.markdown(f"- {g}")
+    # 4. Glassmorphic Executive Summary & Next Steps
+    summary_text = eval_data.get("summary", "N/A")
+    next_steps_text = eval_data.get("next_steps", "N/A")
 
-    st.divider()
+    render_html(f"""
+    <div style="background:#ffffff; border:1px solid #e2e8f0; border-radius:18px; box-shadow:0 8px 30px rgba(0,0,0,0.03); padding:1.6rem; margin-bottom:1.5rem;">
+        <h4 style="margin:0 0 0.8rem 0; font-family:Outfit,sans-serif; color:#1e293b; font-size:1.15rem; display:flex; align-items:center; gap:8px;">
+            📝 Executive Summary
+        </h4>
+        <div style="color:#334155; font-size:0.95rem; line-height:1.65;">{summary_text}</div>
+    </div>
 
-    # Summary & Next steps
-    st.subheader("📝 Executive Summary")
-    st.write(eval_data.get("summary", ""))
-
-    st.subheader("👉 Recommended Next Steps")
-    st.info(eval_data.get("next_steps", ""))
+    <div style="background:#f0f9ff; border:1px solid #bae6fd; border-radius:18px; padding:1.6rem; margin-bottom:1.8rem;">
+        <h4 style="margin:0 0 0.8rem 0; font-family:Outfit,sans-serif; color:#0369a1; font-size:1.15rem; display:flex; align-items:center; gap:8px;">
+            👉 Recommended Next Steps
+        </h4>
+        <div style="color:#0c4a6e; font-size:0.95rem; line-height:1.65;">{next_steps_text}</div>
+    </div>
+    """)
 
     st.divider()
 
