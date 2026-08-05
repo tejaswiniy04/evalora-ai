@@ -25,7 +25,7 @@ from evaluator import generate_evaluation
 from pdf_generator import generate_pdf_report
 from question_generator import generate_questions, generate_skills_for_role
 from session import InterviewSession
-from transcriber import SUPPORTED_LANGUAGES, transcribe_audio
+from transcriber import transcribe_audio
 
 # ── Predefined Job Roles ───────────────────────────────────────────────────
 PREDEFINED_ROLES = [
@@ -440,29 +440,19 @@ elif st.session_state.step == "interview":
             )
 
         with tab_voice:
-            col_lang1, col_lang2 = st.columns([2, 1])
-            with col_lang1:
-                selected_lang_name = st.selectbox(
-                    "🌐 Spoken Audio Language:",
-                    options=list(SUPPORTED_LANGUAGES.keys()),
-                    index=0,
-                    key=f"audio_lang_{q_idx}"
-                )
-            selected_lang_code = SUPPORTED_LANGUAGES[selected_lang_name]
-
-            st.markdown("Click the microphone button below to record your answer. Speak clearly in your selected language.")
+            st.markdown("Click the microphone button below to record your answer. Speak clearly.")
             audio_input = st.audio_input("Record Microphone Input", key=f"audio_input_{q_idx}")
 
             voice_ans = ""
             if audio_input is not None:
                 client = get_groq_client(api_key)
                 if client:
-                    with st.spinner(f"⚡ Transcribing audio ({selected_lang_name}) via Groq Whisper API..."):
+                    with st.spinner("⚡ Transcribing audio via Groq Whisper API..."):
                         try:
                             audio_bytes = audio_input.read()
-                            transcribed = transcribe_audio(audio_bytes, client, language=selected_lang_code)
+                            transcribed = transcribe_audio(audio_bytes, client)
                             if transcribed:
-                                st.success(f"✓ Voice transcribed successfully ({selected_lang_name})!")
+                                st.success("✓ Voice transcribed successfully!")
                                 voice_ans = st.text_area(
                                     "Review & Edit Transcribed Answer:",
                                     value=transcribed,
