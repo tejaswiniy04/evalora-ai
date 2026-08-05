@@ -76,7 +76,7 @@ st.set_page_config(
     page_title="Evalora AI",
     page_icon="🎯",
     layout="wide",
-    initial_sidebar_state="expanded",
+    initial_sidebar_state="auto",
 )
 
 st.markdown("""
@@ -233,6 +233,41 @@ st.markdown("""
     .stButton>button[kind="primary"]:hover {
         transform: translateY(-1px) !important;
         box-shadow: 0 6px 20px rgba(0, 198, 255, 0.45) !important;
+    }
+
+    /* Responsive Mobile Media Queries */
+    @media (max-width: 768px) {
+        .main-title {
+            font-size: 2.1rem !important;
+            margin-bottom: 0.4rem !important;
+        }
+        .sub-title {
+            font-size: 0.95rem !important;
+            margin-bottom: 1.5rem !important;
+            padding: 0 10px !important;
+        }
+        .hero-badge {
+            font-size: 0.75rem !important;
+            padding: 4px 12px !important;
+        }
+        .glass-card, .q-card {
+            padding: 1.1rem !important;
+            border-radius: 12px !important;
+            margin-bottom: 1rem !important;
+        }
+        .stButton>button {
+            width: 100% !important;
+            min-height: 48px !important;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .main-title {
+            font-size: 1.7rem !important;
+        }
+        .stMarkdown, p, span {
+            font-size: 0.95rem !important;
+        }
     }
 </style>
 """, unsafe_allow_html=True)
