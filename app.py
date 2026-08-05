@@ -358,22 +358,36 @@ st.markdown("""
         background-color: #ffffff !important;
     }
 
-    /* Primary Action Buttons */
+    /* Action Buttons (Primary & Secondary Safeguard) */
     .stButton>button {
         border-radius: 12px !important;
         font-weight: 700 !important;
         transition: all 0.2s ease-in-out !important;
+        background: #ffffff !important;
+        color: #4f46e5 !important;
+        border: 1px solid #cbd5e1 !important;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03) !important;
+    }
+
+    .stButton>button:hover {
+        background: #f1f5f9 !important;
+        border-color: #4f46e5 !important;
+        color: #4338ca !important;
+        transform: translateY(-1px) !important;
+        box-shadow: 0 4px 14px rgba(79, 70, 229, 0.15) !important;
     }
 
     .stButton>button[kind="primary"] {
         background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%) !important;
         border: none !important;
-        color: white !important;
+        color: #ffffff !important;
         box-shadow: 0 8px 25px rgba(79, 70, 229, 0.35) !important;
         min-height: 48px !important;
     }
 
     .stButton>button[kind="primary"]:hover {
+        background: linear-gradient(135deg, #4338ca 0%, #6d28d9 100%) !important;
+        color: #ffffff !important;
         transform: translateY(-2px) !important;
         box-shadow: 0 12px 30px rgba(79, 70, 229, 0.5) !important;
     }
