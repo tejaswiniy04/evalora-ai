@@ -569,7 +569,7 @@ with col_hdr2:
         unauth_idx = 0 if st.session_state.auth_mode == "login" else 1
         nav_choice = st.radio(
             "Landing Header Navigation",
-            options=["🔑 Sign In", "📝 Create Account", "ℹ️ About Evalora AI", "⚙️ How It Works", "⭐ Features"],
+            options=["🔑 Sign In", "📝 Create Account"],
             index=unauth_idx,
             horizontal=True,
             label_visibility="collapsed",
@@ -581,12 +581,6 @@ with col_hdr2:
         elif nav_choice == "📝 Create Account" and st.session_state.auth_mode != "signup":
             st.session_state.auth_mode = "signup"
             st.rerun()
-        elif nav_choice == "ℹ️ About Evalora AI":
-            st.info("🎯 **Evalora AI** provides role-based interviews, live voice/text scoring, and PDF candidate evaluation reports.")
-        elif nav_choice == "⚙️ How It Works":
-            st.success("1️⃣ **Sign In** -> 2️⃣ **Setup Role & Skills** -> 3️⃣ **Answer Live Questions** -> 4️⃣ **Export AI Report**")
-        elif nav_choice == "⭐ Features":
-            st.warning("⚡ Features: Groq Llama-3.1 AI, Whisper Speech-to-Text, 99+ Languages, Auto-Email Alerts & PDF Generator.")
     else:
         # Interactive Step Navigation Pills after login
         s_step = st.session_state.step
@@ -683,23 +677,6 @@ if not st.session_state.authenticated:
             <div>
                 <div style="font-weight: 700; color: #1e293b; font-size: 0.95rem;">AI-Powered Efficiency</div>
                 <div style="font-size: 0.82rem; color: #64748b;">Save time and hire the best talent effortlessly.</div>
-            </div>
-        </div>
-
-        <div class="stats-bar">
-            <div style="display: flex; justify-content: space-between; text-align: center;">
-                <div>
-                    <div style="font-weight: 800; font-size: 1.1rem; color: #1e293b;">&#128101; 10K+</div>
-                    <div style="font-size: 0.75rem; color: #64748b;">Interviews Conducted</div>
-                </div>
-                <div>
-                    <div style="font-weight: 800; font-size: 1.1rem; color: #16a34a;">&#127942; 95%</div>
-                    <div style="font-size: 0.75rem; color: #64748b;">Accuracy Rate</div>
-                </div>
-                <div>
-                    <div style="font-weight: 800; font-size: 1.1rem; color: #d97706;">&#128522; 500+</div>
-                    <div style="font-size: 0.75rem; color: #64748b;">Companies Trust Us</div>
-                </div>
             </div>
         </div>
         """, unsafe_allow_html=True)
