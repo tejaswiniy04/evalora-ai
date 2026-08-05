@@ -682,11 +682,20 @@ if not st.session_state.authenticated:
         """, unsafe_allow_html=True)
 
     with col_interactive:
-        st.markdown("""
-        <div class="lock-badge">&#128274;</div>
+        if st.session_state.auth_mode == "login":
+            card_icon = "&#128274;"
+            card_title = "Sign In to Evalora AI &#128075;"
+            card_subtitle = "Access your AI-powered candidate workspace"
+        else:
+            card_icon = "&#128221;"
+            card_title = "Create Your Account &#128640;"
+            card_subtitle = "Register now to unlock role-based AI interviews"
+
+        st.markdown(f"""
+        <div class="lock-badge">{card_icon}</div>
         <div style="text-align: center; margin-bottom: 1.2rem;">
-            <h3 style="margin: 0; font-size: 1.5rem;">Welcome to Evalora AI &#128075;</h3>
-            <div style="color: #64748b; font-size: 0.88rem; margin-top: 4px;">Sign in or create your account to begin</div>
+            <h3 style="margin: 0; font-size: 1.5rem; font-family: Outfit;">{card_title}</h3>
+            <div style="color: #64748b; font-size: 0.88rem; margin-top: 4px;">{card_subtitle}</div>
         </div>
         """, unsafe_allow_html=True)
 
@@ -723,7 +732,11 @@ if not st.session_state.authenticated:
                 else:
                     st.error(res)
 
-            st.markdown("<br>", unsafe_allow_html=True)
+            st.markdown("<div style='text-align: center; margin-top: 1rem;'>", unsafe_allow_html=True)
+            if st.button("New to Evalora AI? Create an account 📝", key="switch_to_signup_btn", use_container_width=True):
+                st.session_state.auth_mode = "signup"
+                st.rerun()
+            st.markdown("</div>", unsafe_allow_html=True)
 
         else:
             reg_name = st.text_input("Full Name", placeholder="Enter your full name", key="reg_name_val")
@@ -738,6 +751,12 @@ if not st.session_state.authenticated:
                     st.rerun()
                 else:
                     st.error(msg)
+
+            st.markdown("<div style='text-align: center; margin-top: 1rem;'>", unsafe_allow_html=True)
+            if st.button("Already have an account? Sign in 🔑", key="switch_to_login_btn", use_container_width=True):
+                st.session_state.auth_mode = "login"
+                st.rerun()
+            st.markdown("</div>", unsafe_allow_html=True)
 
         # Footer Bar (Unauthenticated Landing)
         st.markdown("""
