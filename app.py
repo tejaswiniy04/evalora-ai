@@ -140,11 +140,28 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 
-# ── Helper functions ───────────────────────────────────────────────────────
-def get_groq_client(api_key: str):
+def get_groq_api_key() -> str:
+    """Retrieve Groq API Key automatically from environment or Streamlit secrets."""
+    env_key = os.getenv("GROQ_API_KEY", "").strip()
+    if env_key and env_key != "your_groq_api_key_here":
+        return env_key
+
+    try:
+        if "GROQ_API_KEY" in st.secrets:
+            sec_key = str(st.secrets["GROQ_API_KEY"]).strip()
+            if sec_key and sec_key != "your_groq_api_key_here":
+                return sec_key
+    except Exception:
+        pass
+
+    return os.environ.get("GROQ_API_KEY", "").strip()
+
+
+def get_groq_client(api_key: str = None):
+    key_to_use = api_key or get_groq_api_key()
     try:
         from groq import Groq
-        return Groq(api_key=api_key)
+        return Groq(api_key=key_to_use)
     except Exception as e:
         st.error(f"Failed to initialize Groq client: {e}")
         return None
@@ -214,14 +231,8 @@ with st.sidebar:
             logout_user()
         st.divider()
 
-    env_key = os.getenv("GROQ_API_KEY", "").strip()
-    if env_key and env_key != "your_groq_api_key_here":
-        api_key = env_key
-        st.success("API Key detected from environment")
-    else:
-        api_key = st.text_input("Groq API Key", type="password", help="Get free key at console.groq.com")
-        if not api_key:
-            st.warning("Please provide a valid Groq API Key to proceed.")
+    api_key = get_groq_api_key()
+    st.markdown("🟢 **AI Engine:** Ready (Groq Llama-3.1)")
 
     st.divider()
     st.markdown("### Progress")
@@ -332,12 +343,9 @@ if st.session_state.step == "setup":
 
     st.markdown("<br>", unsafe_allow_html=True)
     if st.button("🚀 Start Interview", type="primary", use_container_width=True):
-        if not api_key:
-            st.error("GROQ_API_KEY is required to generate interview questions!")
-        else:
-            client = get_groq_client(api_key)
-            if client:
-                with st.spinner(f"Generating 7 structured questions for **{final_role}**..."):
+        client = get_groq_client(api_key)
+        if client:
+            with st.spinner(f"Generating 7 structured questions for **{final_role}**..."):
                     try:
                         questions = generate_questions(final_role, parsed_skills, client)
                         st.session_state.candidate_name = name_input
