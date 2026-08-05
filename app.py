@@ -899,9 +899,11 @@ elif st.session_state.step == "interview":
     # Question Card Container
     st.markdown(f"""
     <div class="q-card">
-        <span class="category-badge badge-{cat}">{cat} Question</span>
-        <span style="color: #8b949e; float: right; font-size: 0.9rem;">Focus: <i>{q_curr.get('focus', '')}</i></span>
-        <h3 style="color: #ffffff; margin-top: 10px;">{q_curr['question']}</h3>
+        <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:0.8rem;">
+            <span class="category-badge badge-{cat}">{cat} Question</span>
+            <span style="color:#94a3b8; font-size:0.82rem; font-style:italic;">🎯 Focus: {q_curr.get('focus', '')}</span>
+        </div>
+        <h3 style="color:#0f172a; margin:0; font-family:Outfit,sans-serif; font-size:1.2rem; line-height:1.5;">{q_curr['question']}</h3>
     </div>
     """, unsafe_allow_html=True)
 
@@ -965,14 +967,56 @@ elif st.session_state.step == "interview":
         res = st.session_state.last_result
         score = res["score"]
 
-        score_color = "#238636" if score >= 8 else ("#d29922" if score >= 6 else "#da3633")
-        
+        score_color  = "#16a34a" if score >= 8 else ("#d97706" if score >= 6 else "#dc2626")
+        score_bg     = "#dcfce7" if score >= 8 else ("#fef3c7" if score >= 6 else "#fee2e2")
+        score_border = "#86efac" if score >= 8 else ("#fde68a" if score >= 6 else "#fca5a5")
+        score_label  = "Excellent" if score >= 8 else ("Good" if score >= 6 else "Needs Work")
+        score_icon   = "🟢" if score >= 8 else ("🟡" if score >= 6 else "🔴")
+
         st.markdown(f"""
-        <div style="background: #161b22; border-left: 4px solid {score_color}; padding: 1.2rem; border-radius: 8px; margin-bottom: 1.5rem;">
-            <h4 style="margin:0; color: {score_color};">Score: {score}/10</h4>
-            <p style="margin-top: 8px; color: #c9d1d9;"><b>Feedback:</b> {res.get('feedback', '')}</p>
-            <p style="color: #7ee787; margin: 4px 0;"><b>[+] Strength:</b> {res.get('strengths', '')}</p>
-            <p style="color: #ffa657; margin: 4px 0;"><b>[-] Area to Improve:</b> {res.get('improvement', '')}</p>
+        <div style="background:#ffffff; border:1px solid #e2e8f0; border-radius:20px;
+                    box-shadow:0 8px 32px rgba(100,110,140,0.08); padding:1.8rem;
+                    margin-bottom:1.5rem; position:relative; overflow:hidden;">
+
+            <!-- top accent strip -->
+            <div style="position:absolute; top:0; left:0; right:0; height:4px;
+                        background:linear-gradient(90deg,{score_color},{score_color}88);
+                        border-radius:20px 20px 0 0;"></div>
+
+            <!-- score pill row -->
+            <div style="display:flex; align-items:center; gap:1rem; margin-bottom:1.2rem; margin-top:0.4rem;">
+                <div style="background:{score_bg}; border:1px solid {score_border};
+                            border-radius:50px; padding:0.5rem 1.2rem;
+                            display:flex; align-items:center; gap:0.5rem;">
+                    <span style="font-size:1.5rem; font-weight:800; color:{score_color};">{score}/10</span>
+                    <span style="font-size:0.78rem; font-weight:700; color:{score_color}; text-transform:uppercase;
+                                letter-spacing:0.06em;">{score_label}</span>
+                </div>
+                <span style="font-size:1.2rem;">{score_icon}</span>
+            </div>
+
+            <!-- feedback -->
+            <p style="margin:0 0 1rem 0; color:#334155; font-size:0.95rem; line-height:1.6;">
+                <span style="font-weight:700; color:#1e293b;">📋 Feedback:&nbsp;</span>{res.get('feedback', '')}
+            </p>
+
+            <!-- two-column strength / improvement -->
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
+                <div style="background:#f0fdf4; border:1px solid #bbf7d0; border-radius:14px; padding:1rem;">
+                    <div style="font-size:0.78rem; font-weight:700; color:#15803d;
+                                text-transform:uppercase; letter-spacing:0.05em; margin-bottom:0.4rem;">
+                        ✅ Strength
+                    </div>
+                    <div style="color:#166534; font-size:0.9rem; line-height:1.5;">{res.get('strengths', '')}</div>
+                </div>
+                <div style="background:#fffbeb; border:1px solid #fde68a; border-radius:14px; padding:1rem;">
+                    <div style="font-size:0.78rem; font-weight:700; color:#b45309;
+                                text-transform:uppercase; letter-spacing:0.05em; margin-bottom:0.4rem;">
+                        🔧 Area to Improve
+                    </div>
+                    <div style="color:#92400e; font-size:0.9rem; line-height:1.5;">{res.get('improvement', '')}</div>
+                </div>
+            </div>
         </div>
         """, unsafe_allow_html=True)
 
