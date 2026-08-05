@@ -76,12 +76,17 @@ st.set_page_config(
     page_title="Evalora AI",
     page_icon="🎯",
     layout="wide",
-    initial_sidebar_state="auto",
+    initial_sidebar_state="collapsed",
 )
 
 st.markdown("""
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700;800&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap');
+
+    /* Hide Streamlit Sidebar Completely */
+    section[data-testid="stSidebar"] {
+        display: none !important;
+    }
 
     /* Global Soft Light Pastel Canvas */
     html, body, [class*="css"] {
@@ -463,88 +468,84 @@ def logout_user():
 # Initialize session state
 init_session_state()
 
-# ── Sidebar ────────────────────────────────────────────────────────────────
-with st.sidebar:
-    col_sb1, col_sb2 = st.columns([1, 4])
-    with col_sb1:
-        st.image("https://img.icons8.com/color/96/artificial-intelligence.png", width=42)
-    with col_sb2:
-        st.markdown('<div style="font-family: Outfit; font-size: 1.5rem; font-weight: 800; color: #1e293b; line-height: 1;">Evalora <span style="color:#5e5ce6;">AI</span></div>', unsafe_allow_html=True)
-        st.markdown('<div style="font-size: 0.75rem; color: #8792a6; margin-top: 2px;">AI-Powered Structured Recruitment</div>', unsafe_allow_html=True)
+# ── Top Header Navigation Bar ──────────────────────────────────────────────
+col_hdr1, col_hdr2, col_hdr3 = st.columns([1.5, 3.2, 1.3], gap="small")
 
+with col_hdr1:
     st.markdown("""
-    <div class="status-card">
-        <div style="font-size: 0.85rem; font-weight: 700; color: #1e293b;">🟢 AI Engine: Ready</div>
-        <div style="font-size: 0.75rem; color: #64748b;">Groq Llama-3.1</div>
+    <div style="display: flex; align-items: center; gap: 10px; padding: 2px 0;">
+        <img src="https://img.icons8.com/color/96/artificial-intelligence.png" width="38" />
+        <div>
+            <div style="font-family: Outfit; font-size: 1.4rem; font-weight: 800; color: #1e293b; line-height: 1;">Evalora <span style="color:#5e5ce6;">AI</span></div>
+            <div style="font-size: 0.72rem; color: #64748b;">Structured AI Recruitment</div>
+        </div>
     </div>
     """, unsafe_allow_html=True)
 
-    st.markdown("### Navigation")
+with col_hdr2:
     if not st.session_state.authenticated:
         nav_choice = st.radio(
-            "Landing Navigation Menu",
+            "Landing Header Navigation",
             options=["🔑 Sign In", "📝 Create Account", "ℹ️ About Evalora AI", "⚙️ How It Works", "⭐ Features"],
+            horizontal=True,
             label_visibility="collapsed",
-            key="unauth_nav_radio"
+            key="hdr_unauth_nav_radio"
         )
         if nav_choice == "ℹ️ About Evalora AI":
-            st.info("🎯 **Evalora AI** is a next-gen recruitment agent providing role-based interviews, live voice/text scoring, and PDF candidate reports.")
+            st.info("🎯 **Evalora AI** provides role-based interviews, live voice/text scoring, and PDF candidate evaluation reports.")
         elif nav_choice == "⚙️ How It Works":
-            st.success("1️⃣ **Sign In** -> 2️⃣ **Select Job Role & Skills** -> 3️⃣ **Answer Live Q&A** -> 4️⃣ **Get AI Report**")
+            st.success("1️⃣ **Sign In** -> 2️⃣ **Setup Role & Skills** -> 3️⃣ **Answer Live Questions** -> 4️⃣ **Export AI Report**")
         elif nav_choice == "⭐ Features":
-            st.warning("⚡ Features: Groq Llama-3.1 AI, Whisper Speech-to-Text, 99+ Languages, Auto-Email Notifications & PDF Generator.")
+            st.warning("⚡ Features: Groq Llama-3.1 AI, Whisper Speech-to-Text, 99+ Languages, Auto-Email Alerts & PDF Generator.")
     else:
-        # Interactive Step Navigation after login
+        # Interactive Step Navigation Pills after login
         s_step = st.session_state.step
         step_idx = {"setup": 0, "interview": 1, "evaluation": 2}.get(s_step, 0)
-        
+
         selected_nav_step = st.radio(
-            "Workspace Phase Navigation",
-            options=["📋 1. Candidate & Role Setup", "🎯 2. Live Q&A Interview", "📊 3. Evaluation Report"],
+            "Header Phase Navigation",
+            options=["📋 1. Setup Role", "🎯 2. Live Interview", "📊 3. Evaluation Report"],
             index=step_idx,
+            horizontal=True,
             label_visibility="collapsed",
-            key="auth_step_nav_radio"
+            key="hdr_auth_step_nav_radio"
         )
-        
+
         # Interactive Navigation Click Handlers
-        if "Candidate & Role Setup" in selected_nav_step and st.session_state.step != "setup":
+        if "1. Setup Role" in selected_nav_step and st.session_state.step != "setup":
             st.session_state.step = "setup"
             st.rerun()
-        elif "Live Q&A Interview" in selected_nav_step and st.session_state.step != "interview":
+        elif "2. Live Interview" in selected_nav_step and st.session_state.step != "interview":
             if st.session_state.questions:
                 st.session_state.step = "interview"
                 st.rerun()
             else:
-                st.sidebar.warning("⚠️ Please complete Setup first to generate interview questions.")
-        elif "Evaluation Report" in selected_nav_step and st.session_state.step != "evaluation":
+                st.warning("⚠️ Complete Setup first to generate questions.")
+        elif "3. Evaluation Report" in selected_nav_step and st.session_state.step != "evaluation":
             if st.session_state.evaluation:
                 st.session_state.step = "evaluation"
                 st.rerun()
             else:
-                st.sidebar.warning("⚠️ Complete the Q&A interview session first to unlock Evaluation Report.")
+                st.warning("⚠️ Complete Q&A interview first to view Evaluation Report.")
 
-    st.divider()
-    st.markdown("### Progress")
-    if st.session_state.step == "interview" and st.session_state.questions:
-        q_num = st.session_state.current_q_idx + 1
-        total_q = len(st.session_state.questions)
-        pct = q_num / total_q
-        st.progress(pct)
-        st.write(f"Question {q_num} of {total_q} ({int(pct * 100)}%)")
-    elif st.session_state.step == "evaluation":
-        st.progress(1.0)
-        st.write("Completed! (100%)")
+with col_hdr3:
+    if not st.session_state.authenticated:
+        st.markdown("""
+        <div style="background: #eeedff; border-radius: 12px; padding: 6px 12px; text-align: center;">
+            <div style="font-size: 0.78rem; font-weight: 700; color: #1e293b;">🟢 AI Engine: Ready</div>
+            <div style="font-size: 0.7rem; color: #64748b;">Groq Llama-3.1</div>
+        </div>
+        """, unsafe_allow_html=True)
     else:
-        st.progress(0.0)
-        st.write("Setup Phase (0%)")
+        u_name = st.session_state.user_info.get("name", "User") if st.session_state.user_info else "User"
+        col_u1, col_u2 = st.columns([1.1, 1])
+        with col_u1:
+            st.markdown(f"<div style='font-size:0.8rem; font-weight:700; color:#1e293b; padding-top:6px;'>👤 {u_name}</div>", unsafe_allow_html=True)
+        with col_u2:
+            if st.button("Sign Out 🚪", key="hdr_signout_btn", use_container_width=True):
+                logout_user()
 
-    if st.session_state.step != "setup":
-        st.divider()
-        if st.button("Reset Interview 🔄", use_container_width=True):
-            reset_session()
-            st.rerun()
-
-    st.markdown("<br><br><div style='font-size: 0.75rem; color: #94a3b8; text-align: center;'>© 2026 Evalora AI<br>All rights reserved.</div>", unsafe_allow_html=True)
+st.divider()
 
 # ── Main Content Area ──────────────────────────────────────────────────────
 api_key = get_groq_api_key()
