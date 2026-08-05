@@ -472,8 +472,6 @@ with st.sidebar:
         st.markdown('<div style="font-family: Outfit; font-size: 1.5rem; font-weight: 800; color: #1e293b; line-height: 1;">Evalora <span style="color:#5e5ce6;">AI</span></div>', unsafe_allow_html=True)
         st.markdown('<div style="font-size: 0.75rem; color: #8792a6; margin-top: 2px;">AI-Powered Structured Recruitment</div>', unsafe_allow_html=True)
 
-    st.markdown("<br>", unsafe_allow_html=True)
-
     st.markdown("""
     <div class="status-card">
         <div style="font-size: 0.85rem; font-weight: 700; color: #1e293b;">🟢 AI Engine: Ready</div>
@@ -481,30 +479,49 @@ with st.sidebar:
     </div>
     """, unsafe_allow_html=True)
 
-    if st.session_state.authenticated and st.session_state.user_info:
-        user_name = st.session_state.user_info.get("name", "User")
-        st.markdown(f"👤 **Logged in as:**<br>**{user_name}**", unsafe_allow_html=True)
-        if st.button("Sign Out 🚪", use_container_width=True):
-            logout_user()
-        st.divider()
-
     st.markdown("### Navigation")
     if not st.session_state.authenticated:
-        st.markdown("🔑 **Sign In**")
-        st.markdown("📝 **Create Account**")
-        st.markdown("ℹ️ **About Evalora AI**")
-        st.markdown("⚙️ **How It Works**")
-        st.markdown("⭐ **Features**")
+        nav_choice = st.radio(
+            "Landing Navigation Menu",
+            options=["🔑 Sign In", "📝 Create Account", "ℹ️ About Evalora AI", "⚙️ How It Works", "⭐ Features"],
+            label_visibility="collapsed",
+            key="unauth_nav_radio"
+        )
+        if nav_choice == "ℹ️ About Evalora AI":
+            st.info("🎯 **Evalora AI** is a next-gen recruitment agent providing role-based interviews, live voice/text scoring, and PDF candidate reports.")
+        elif nav_choice == "⚙️ How It Works":
+            st.success("1️⃣ **Sign In** -> 2️⃣ **Select Job Role & Skills** -> 3️⃣ **Answer Live Q&A** -> 4️⃣ **Get AI Report**")
+        elif nav_choice == "⭐ Features":
+            st.warning("⚡ Features: Groq Llama-3.1 AI, Whisper Speech-to-Text, 99+ Languages, Auto-Email Notifications & PDF Generator.")
     else:
         # Interactive Step Navigation after login
         s_step = st.session_state.step
-        nav_setup = "👉 **1. Setup Candidate & Role**" if s_step == "setup" else "📋 1. Setup Candidate & Role"
-        nav_interview = "👉 **2. Live Q&A Interview**" if s_step == "interview" else "🎯 2. Live Q&A Interview"
-        nav_eval = "👉 **3. Evaluation Report**" if s_step == "evaluation" else "📊 3. Evaluation Report"
+        step_idx = {"setup": 0, "interview": 1, "evaluation": 2}.get(s_step, 0)
         
-        st.markdown(nav_setup)
-        st.markdown(nav_interview)
-        st.markdown(nav_eval)
+        selected_nav_step = st.radio(
+            "Workspace Phase Navigation",
+            options=["📋 1. Candidate & Role Setup", "🎯 2. Live Q&A Interview", "📊 3. Evaluation Report"],
+            index=step_idx,
+            label_visibility="collapsed",
+            key="auth_step_nav_radio"
+        )
+        
+        # Interactive Navigation Click Handlers
+        if "Candidate & Role Setup" in selected_nav_step and st.session_state.step != "setup":
+            st.session_state.step = "setup"
+            st.rerun()
+        elif "Live Q&A Interview" in selected_nav_step and st.session_state.step != "interview":
+            if st.session_state.questions:
+                st.session_state.step = "interview"
+                st.rerun()
+            else:
+                st.sidebar.warning("⚠️ Please complete Setup first to generate interview questions.")
+        elif "Evaluation Report" in selected_nav_step and st.session_state.step != "evaluation":
+            if st.session_state.evaluation:
+                st.session_state.step = "evaluation"
+                st.rerun()
+            else:
+                st.sidebar.warning("⚠️ Complete the Q&A interview session first to unlock Evaluation Report.")
 
     st.divider()
     st.markdown("### Progress")
@@ -547,7 +564,7 @@ if not st.session_state.authenticated:
         # 4 Colorful Feature Cards
         st.markdown("""
         <div class="feature-card">
-            <div class="feature-icon icon-purple">👥</div>
+            <div class="feature-icon icon-purple">&#128101;</div>
             <div>
                 <div style="font-weight: 700; color: #1e293b; font-size: 0.95rem;">Role-Based Interviews</div>
                 <div style="font-size: 0.82rem; color: #64748b;">Customized questions for every job role.</div>
@@ -555,7 +572,7 @@ if not st.session_state.authenticated:
         </div>
 
         <div class="feature-card">
-            <div class="feature-icon icon-blue">📊</div>
+            <div class="feature-icon icon-blue">&#128202;</div>
             <div>
                 <div style="font-weight: 700; color: #1e293b; font-size: 0.95rem;">Real-Time Scoring</div>
                 <div style="font-size: 0.82rem; color: #64748b;">Instant evaluation and feedback per answer.</div>
@@ -563,7 +580,7 @@ if not st.session_state.authenticated:
         </div>
 
         <div class="feature-card">
-            <div class="feature-icon icon-green">🛡️</div>
+            <div class="feature-icon icon-green">&#128737;</div>
             <div>
                 <div style="font-weight: 700; color: #1e293b; font-size: 0.95rem;">Comprehensive Reports</div>
                 <div style="font-size: 0.82rem; color: #64748b;">Detailed insights, PDF reports, and analytics.</div>
@@ -571,7 +588,7 @@ if not st.session_state.authenticated:
         </div>
 
         <div class="feature-card">
-            <div class="feature-icon icon-orange">⚡</div>
+            <div class="feature-icon icon-orange">&#9889;</div>
             <div>
                 <div style="font-weight: 700; color: #1e293b; font-size: 0.95rem;">AI-Powered Efficiency</div>
                 <div style="font-size: 0.82rem; color: #64748b;">Save time and hire the best talent effortlessly.</div>
@@ -581,15 +598,15 @@ if not st.session_state.authenticated:
         <div class="stats-bar">
             <div style="display: flex; justify-content: space-between; text-align: center;">
                 <div>
-                    <div style="font-weight: 800; font-size: 1.1rem; color: #1e293b;">👥 10K+</div>
+                    <div style="font-weight: 800; font-size: 1.1rem; color: #1e293b;">&#128101; 10K+</div>
                     <div style="font-size: 0.75rem; color: #64748b;">Interviews Conducted</div>
                 </div>
                 <div>
-                    <div style="font-weight: 800; font-size: 1.1rem; color: #16a34a;">🏆 95%</div>
+                    <div style="font-weight: 800; font-size: 1.1rem; color: #16a34a;">&#127942; 95%</div>
                     <div style="font-size: 0.75rem; color: #64748b;">Accuracy Rate</div>
                 </div>
                 <div>
-                    <div style="font-weight: 800; font-size: 1.1rem; color: #d97706;">😊 500+</div>
+                    <div style="font-weight: 800; font-size: 1.1rem; color: #d97706;">&#128522; 500+</div>
                     <div style="font-size: 0.75rem; color: #64748b;">Companies Trust Us</div>
                 </div>
             </div>
@@ -598,9 +615,9 @@ if not st.session_state.authenticated:
 
     with col_interactive:
         st.markdown("""
-        <div class="lock-badge">🔒</div>
+        <div class="lock-badge">&#128274;</div>
         <div style="text-align: center; margin-bottom: 1.5rem;">
-            <h3 style="margin: 0; font-size: 1.5rem;">Welcome Back! 👋</h3>
+            <h3 style="margin: 0; font-size: 1.5rem;">Welcome Back! &#128075;</h3>
             <div style="color: #64748b; font-size: 0.9rem;">Sign in to your Evalora AI account</div>
         </div>
         """, unsafe_allow_html=True)
@@ -636,23 +653,33 @@ if not st.session_state.authenticated:
                 else:
                     st.error(msg)
 
-    st.stop()  # Stop rendering until user is authenticated
+        st.stop()  # Stop rendering until user is authenticated
 
 # ───────────────────────────────────────────────────────────────────────────
 # WORKSPACE TOP HEADER BAR (AFTER LOGIN ONLY)
 # ───────────────────────────────────────────────────────────────────────────
 user_display = st.session_state.user_info.get("name", "User") if st.session_state.user_info else "User"
 current_step_name = {
-    "setup": "1. Interview Setup",
-    "interview": "2. Live Q&A Session",
-    "evaluation": "3. Evaluation Report"
+    "setup": "Phase 1: Candidate & Role Setup",
+    "interview": "Phase 2: Live Q&A Session",
+    "evaluation": "Phase 3: Evaluation Report"
 }.get(st.session_state.step, "Workspace")
 
 st.markdown(f"""
-<div style="background: #ffffff; border-radius: 20px; border: 1px solid #e8ecf4; box-shadow: 0 10px 30px rgba(100, 110, 140, 0.05); padding: 1.2rem 1.8rem; margin-bottom: 1.8rem; display: flex; align-items: center; justify-content: space-between;">
-    <div>
-        <div style="font-family: Outfit; font-size: 1.6rem; font-weight: 800; color: #1e293b; line-height: 1.2;">🎯 Evalora <span style="color:#5e5ce6;">AI Workspace</span></div>
-        <div style="font-size: 0.88rem; color: #64748b; margin-top: 4px;">Welcome back, <b>{user_display}</b> | Current Phase: <span style="color:#5e5ce6; font-weight: 700;">{current_step_name}</span></div>
+<div style="background: #ffffff; border-radius: 20px; border: 1px solid #e8ecf4; box-shadow: 0 10px 30px rgba(100, 110, 140, 0.05); padding: 1.2rem 1.8rem; margin-bottom: 1.8rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem;">
+    <div style="display: flex; align-items: center; gap: 14px;">
+        <img src="https://img.icons8.com/color/96/artificial-intelligence.png" width="40" />
+        <div>
+            <div style="font-family: Outfit; font-size: 1.65rem; font-weight: 800; color: #1e293b; line-height: 1.1;">Evalora <span style="color:#5e5ce6;">AI Workspace</span></div>
+            <div style="font-size: 0.85rem; color: #64748b; margin-top: 3px;">Structured Role-Based Interviewing & Real-Time Candidate Evaluation Portal</div>
+        </div>
+    </div>
+    <div style="display: flex; align-items: center; gap: 16px;">
+        <div style="background: #dcfce7; color: #16a34a; padding: 6px 14px; border-radius: 20px; font-weight: 700; font-size: 0.8rem; border: 1px solid #86efac;">&bull; Active Workspace</div>
+        <div style="text-align: right;">
+            <div style="font-size: 0.9rem; font-weight: 800; color: #1e293b;">{user_display}</div>
+            <div style="font-size: 0.78rem; color: #5e5ce6; font-weight: 700;">{current_step_name}</div>
+        </div>
     </div>
 </div>
 """, unsafe_allow_html=True)
@@ -831,8 +858,8 @@ elif st.session_state.step == "interview":
         <div style="background: #161b22; border-left: 4px solid {score_color}; padding: 1.2rem; border-radius: 8px; margin-bottom: 1.5rem;">
             <h4 style="margin:0; color: {score_color};">Score: {score}/10</h4>
             <p style="margin-top: 8px; color: #c9d1d9;"><b>Feedback:</b> {res.get('feedback', '')}</p>
-            <p style="color: #7ee787; margin: 4px 0;"><b>✓ Strength:</b> {res.get('strengths', '')}</p>
-            <p style="color: #ffa657; margin: 4px 0;"><b>→ Area to Improve:</b> {res.get('improvement', '')}</p>
+            <p style="color: #7ee787; margin: 4px 0;"><b>[+] Strength:</b> {res.get('strengths', '')}</p>
+            <p style="color: #ffa657; margin: 4px 0;"><b>[-] Area to Improve:</b> {res.get('improvement', '')}</p>
         </div>
         """, unsafe_allow_html=True)
 
@@ -843,7 +870,7 @@ elif st.session_state.step == "interview":
                 st.session_state.last_result = None
                 st.rerun()
         else:
-            if st.button("Finish & View Final Report 🎉", type="primary"):
+            if st.button("Finish & View Final Report →", type="primary"):
                 client = get_groq_client(api_key)
                 if client:
                     with st.spinner("Generating comprehensive final evaluation report..."):
