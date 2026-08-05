@@ -81,60 +81,158 @@ st.set_page_config(
 
 st.markdown("""
 <style>
-    /* Dark mode background polish */
-    .stApp {
-        background-color: #0e1117;
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700;800&display=swap');
+
+    /* Global Typography & Dark Space Canvas */
+    html, body, [class*="css"] {
+        font-family: 'Inter', sans-serif;
     }
-    /* Banner styling */
+
+    .stApp {
+        background: radial-gradient(circle at 50% 0%, #151d2a 0%, #0b0e14 100%) !important;
+        color: #f0f6fc;
+    }
+
+    /* Headings */
+    h1, h2, h3, h4, h5, h6 {
+        font-family: 'Outfit', sans-serif !important;
+        letter-spacing: -0.02em;
+    }
+
+    /* Hero Badge & Main Title */
+    .hero-badge {
+        display: inline-block;
+        padding: 6px 16px;
+        background: rgba(0, 210, 255, 0.1);
+        border: 1px solid rgba(0, 210, 255, 0.3);
+        border-radius: 30px;
+        color: #00d2ff;
+        font-size: 0.85rem;
+        font-weight: 600;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+        margin-bottom: 0.8rem;
+        box-shadow: 0 0 15px rgba(0, 210, 255, 0.2);
+    }
+
     .main-title {
         text-align: center;
-        font-size: 2.6rem;
+        font-family: 'Outfit', sans-serif;
+        font-size: 3.2rem;
         font-weight: 800;
-        background: linear-gradient(90deg, #00d2ff 0%, #3a7bd5 100%);
+        background: linear-gradient(135deg, #00d2ff 0%, #7928ca 50%, #ff0080 100%);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
         margin-bottom: 0.2rem;
+        text-shadow: 0 10px 30px rgba(0, 210, 255, 0.2);
     }
+
     .sub-title {
         text-align: center;
-        font-size: 1.1rem;
-        color: #8b949e;
-        margin-bottom: 2rem;
+        font-size: 1.15rem;
+        color: #9ab0c7;
+        margin-bottom: 2.2rem;
+        font-weight: 400;
     }
-    /* Question Card */
+
+    /* Glassmorphism Cards */
+    .glass-card {
+        background: rgba(22, 27, 34, 0.75) !important;
+        backdrop-filter: blur(12px) !important;
+        -webkit-backdrop-filter: blur(12px) !important;
+        border: 1px solid rgba(255, 255, 255, 0.08) !important;
+        border-radius: 16px !important;
+        padding: 1.8rem !important;
+        margin-bottom: 1.5rem !important;
+        box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37) !important;
+        transition: all 0.3s ease-in-out !important;
+    }
+
+    .glass-card:hover {
+        border-color: rgba(0, 210, 255, 0.3) !important;
+        box-shadow: 0 10px 40px 0 rgba(0, 210, 255, 0.15) !important;
+        transform: translateY(-2px);
+    }
+
+    /* Question Card Styling */
     .q-card {
-        background: #161b22;
-        border: 1px solid #30363d;
-        border-radius: 12px;
-        padding: 1.5rem;
-        margin-bottom: 1.2rem;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        background: rgba(22, 27, 34, 0.85);
+        backdrop-filter: blur(12px);
+        border: 1px solid rgba(0, 210, 255, 0.25);
+        border-radius: 16px;
+        padding: 1.8rem;
+        margin-bottom: 1.5rem;
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
     }
+
+    /* Category Badges */
     .category-badge {
         display: inline-block;
-        padding: 4px 12px;
+        padding: 5px 14px;
         border-radius: 20px;
-        font-size: 0.85rem;
-        font-weight: 600;
-        margin-bottom: 10px;
+        font-size: 0.82rem;
+        font-weight: 700;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        margin-bottom: 12px;
     }
     .badge-Technical { background: rgba(0, 210, 255, 0.15); color: #00d2ff; border: 1px solid #00d2ff; }
-    .badge-Behavioral { background: rgba(235, 87, 87, 0.15); color: #ff6b6b; border: 1px solid #ff6b6b; }
+    .badge-Behavioral { background: rgba(255, 107, 107, 0.15); color: #ff6b6b; border: 1px solid #ff6b6b; }
     .badge-Situational { background: rgba(242, 201, 76, 0.15); color: #f2c94c; border: 1px solid #f2c94c; }
     .badge-Motivation { background: rgba(111, 207, 151, 0.15); color: #6fcf97; border: 1px solid #6fcf97; }
 
     /* Score Badges */
     .recommendation-STRONGLY-RECOMMEND {
-        background-color: #238636; color: #ffffff; padding: 6px 16px; border-radius: 8px; font-weight: bold; display: inline-block;
+        background: linear-gradient(135deg, #238636 0%, #2ea043 100%);
+        color: #ffffff; padding: 8px 20px; border-radius: 10px; font-weight: 700; display: inline-block;
+        box-shadow: 0 4px 15px rgba(35, 134, 54, 0.4);
     }
     .recommendation-RECOMMEND {
-        background-color: #1f6beb; color: #ffffff; padding: 6px 16px; border-radius: 8px; font-weight: bold; display: inline-block;
+        background: linear-gradient(135deg, #1f6beb 0%, #388bfd 100%);
+        color: #ffffff; padding: 8px 20px; border-radius: 10px; font-weight: 700; display: inline-block;
+        box-shadow: 0 4px 15px rgba(31, 107, 235, 0.4);
     }
     .recommendation-BORDERLINE {
-        background-color: #9e6a03; color: #ffffff; padding: 6px 16px; border-radius: 8px; font-weight: bold; display: inline-block;
+        background: linear-gradient(135deg, #9e6a03 0%, #d29922 100%);
+        color: #ffffff; padding: 8px 20px; border-radius: 10px; font-weight: 700; display: inline-block;
+        box-shadow: 0 4px 15px rgba(158, 106, 3, 0.4);
     }
     .recommendation-DO-NOT-RECOMMEND {
-        background-color: #da3633; color: #ffffff; padding: 6px 16px; border-radius: 8px; font-weight: bold; display: inline-block;
+        background: linear-gradient(135deg, #da3633 0%, #f85149 100%);
+        color: #ffffff; padding: 8px 20px; border-radius: 10px; font-weight: 700; display: inline-block;
+        box-shadow: 0 4px 15px rgba(218, 54, 51, 0.4);
+    }
+
+    /* Streamlit Input Customization */
+    .stTextInput input, .stSelectbox select, .stTextArea textarea {
+        border-radius: 10px !important;
+        border: 1px solid rgba(255, 255, 255, 0.12) !important;
+        background-color: rgba(16, 22, 30, 0.8) !important;
+        color: #f0f6fc !important;
+    }
+
+    .stTextInput input:focus, .stSelectbox select:focus, .stTextArea textarea:focus {
+        border-color: #00d2ff !important;
+        box-shadow: 0 0 10px rgba(0, 210, 255, 0.3) !important;
+    }
+
+    /* Buttons Styling */
+    .stButton>button {
+        border-radius: 10px !important;
+        font-weight: 600 !important;
+        transition: all 0.2s ease-in-out !important;
+    }
+
+    .stButton>button[kind="primary"] {
+        background: linear-gradient(135deg, #00c6ff 0%, #0072ff 100%) !important;
+        border: none !important;
+        color: white !important;
+        box-shadow: 0 4px 15px rgba(0, 198, 255, 0.3) !important;
+    }
+
+    .stButton>button[kind="primary"]:hover {
+        transform: translateY(-1px) !important;
+        box-shadow: 0 6px 20px rgba(0, 198, 255, 0.45) !important;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -272,8 +370,9 @@ with st.sidebar:
             st.rerun()
 
 # ── Main Header ────────────────────────────────────────────────────────────
+st.markdown('<div style="text-align: center;"><span class="hero-badge">✨ Next-Gen AI Recruitment Agent</span></div>', unsafe_allow_html=True)
 st.markdown('<div class="main-title">🎯 Evalora AI</div>', unsafe_allow_html=True)
-st.markdown('<div class="sub-title">Structured Role-Based Interviewing, Real-Time Scoring & Evaluation</div>', unsafe_allow_html=True)
+st.markdown('<div class="sub-title">Structured Role-Based Interviewing, Real-Time Scoring & Comprehensive Evaluation</div>', unsafe_allow_html=True)
 
 # ───────────────────────────────────────────────────────────────────────────
 # STEP 0: AUTHENTICATION GATE (SIGN IN / SIGN UP)
