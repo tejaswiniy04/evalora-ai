@@ -1,5 +1,5 @@
-# 🎯 Interview Agent
-### Rooman AI 24-Hour Challenge — CATEGORY 1: HR & Recruitment
+# 🎯 Evalora AI
+### AI-Powered Structured Interview & Evaluation Agent
 
 An AI-powered structured interview system that generates role-specific questions,
 scores each answer in real time, and produces a comprehensive evaluation report

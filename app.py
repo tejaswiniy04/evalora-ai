@@ -73,7 +73,7 @@ PREDEFINED_ROLES = [
 
 # ── Custom CSS Styles ──────────────────────────────────────────────────────
 st.set_page_config(
-    page_title="AI Interview Agent",
+    page_title="Evalora AI",
     page_icon="🎯",
     layout="wide",
     initial_sidebar_state="expanded",
@@ -237,7 +237,7 @@ init_session_state()
 # ── Sidebar ────────────────────────────────────────────────────────────────
 with st.sidebar:
     st.image("https://img.icons8.com/color/96/artificial-intelligence.png", width=64)
-    st.title("Interview Agent")
+    st.title("Evalora AI")
     st.caption("AI-Powered Structured Recruitment")
     st.divider()
 
@@ -272,7 +272,7 @@ with st.sidebar:
             st.rerun()
 
 # ── Main Header ────────────────────────────────────────────────────────────
-st.markdown('<div class="main-title">🎯 AI Interview Agent</div>', unsafe_allow_html=True)
+st.markdown('<div class="main-title">🎯 Evalora AI</div>', unsafe_allow_html=True)
 st.markdown('<div class="sub-title">Structured Role-Based Interviewing, Real-Time Scoring & Evaluation</div>', unsafe_allow_html=True)
 
 # ───────────────────────────────────────────────────────────────────────────

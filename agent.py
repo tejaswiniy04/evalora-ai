@@ -133,7 +133,7 @@ def category_color(cat: str) -> str:
 # ── UI components ──────────────────────────────────────────────────────────
 def print_banner() -> None:
     t = Text(justify="center")
-    t.append("[*] INTERVIEW AGENT\n", style="bold cyan")
+    t.append("🎯 EVALORA AI\n", style="bold cyan")
     t.append("AI-Powered Structured Interview System", style="dim")
     console.print(Panel(Align.center(t), border_style="cyan", padding=(1, 6)))
     console.print()
