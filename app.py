@@ -285,7 +285,6 @@ if not st.session_state.authenticated:
                     st.error(res)
 
             st.markdown("<br>", unsafe_allow_html=True)
-            st.info("💡 **Demo Login:** Username: `admin` | Password: `password123`")
 
     with tab_signup:
         col_s1, col_s2 = st.columns([1, 1])
