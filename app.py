@@ -693,29 +693,11 @@ if not st.session_state.authenticated:
 
         st.markdown(f"""
         <div class="lock-badge">{card_icon}</div>
-        <div style="text-align: center; margin-bottom: 1.2rem;">
+        <div style="text-align: center; margin-bottom: 1.5rem;">
             <h3 style="margin: 0; font-size: 1.5rem; font-family: Outfit;">{card_title}</h3>
             <div style="color: #64748b; font-size: 0.88rem; margin-top: 4px;">{card_subtitle}</div>
         </div>
         """, unsafe_allow_html=True)
-
-        card_auth_choice = st.radio(
-            "Card Authentication Selection",
-            options=["🔑 Sign In", "📝 Create Account"],
-            index=0 if st.session_state.auth_mode == "login" else 1,
-            horizontal=True,
-            label_visibility="collapsed",
-            key="card_auth_nav_radio"
-        )
-
-        if "Sign In" in card_auth_choice and st.session_state.auth_mode != "login":
-            st.session_state.auth_mode = "login"
-            st.rerun()
-        elif "Create Account" in card_auth_choice and st.session_state.auth_mode != "signup":
-            st.session_state.auth_mode = "signup"
-            st.rerun()
-
-        st.markdown("<br>", unsafe_allow_html=True)
 
         if st.session_state.auth_mode == "login":
             login_user = st.text_input("Email or Username", placeholder="Enter your email or username", key="login_username_val")
