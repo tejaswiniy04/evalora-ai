@@ -8,6 +8,7 @@ import json
 import os
 import re
 import sys
+import textwrap
 from datetime import datetime
 from pathlib import Path
 
@@ -1008,7 +1009,7 @@ elif st.session_state.step == "interview":
         score_label  = "Excellent" if score >= 8 else ("Good" if score >= 6 else "Needs Work")
         score_icon   = "🟢" if score >= 8 else ("🟡" if score >= 6 else "🔴")
 
-        st.markdown(f"""
+        st.markdown(textwrap.dedent(f"""
         <div class="score-card-anim" style="background:#ffffff; border:1px solid #e2e8f0; border-radius:20px;
                     box-shadow:0 8px 32px rgba(100,110,140,0.08); padding:1.8rem;
                     margin-bottom:1.5rem; position:relative; overflow:hidden;">
@@ -1053,7 +1054,7 @@ elif st.session_state.step == "interview":
                 </div>
             </div>
         </div>
-        """, unsafe_allow_html=True)
+        """), unsafe_allow_html=True)
 
         if q_idx + 1 < len(questions):
             if st.button("Next Question →", type="primary"):
