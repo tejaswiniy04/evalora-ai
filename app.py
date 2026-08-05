@@ -928,8 +928,6 @@ if st.session_state.step == "setup":
                             candidate_name=name_input
                         )
                         st.session_state.step = "interview"
-                        st.session_state._nav_step_sync = "interview"
-                        st.session_state.hdr_auth_step_nav_radio = "🎯 2. Live Interview"
                         st.rerun()
                     except Exception as e:
                         st.error(f"Error generating questions: {e}")
@@ -1097,8 +1095,6 @@ elif st.session_state.step == "interview":
                             logger.warning(f"Could not send interview result email: {email_err}")
 
                         st.session_state.step = "evaluation"
-                        st.session_state._nav_step_sync = "evaluation"
-                        st.session_state.hdr_auth_step_nav_radio = "📊 3. Evaluation Report"
                         st.rerun()
 
     # Progress so far accordion
