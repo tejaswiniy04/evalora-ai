@@ -81,19 +81,25 @@ st.set_page_config(
 
 st.markdown("""
 <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700;800&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700;800&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap');
 
     /* Global Soft Light Pastel Canvas */
     html, body, [class*="css"] {
-        font-family: 'Inter', sans-serif;
+        font-family: 'Plus Jakarta Sans', 'Inter', sans-serif;
     }
 
     .stApp {
         background: #f4f5fa !important;
         background-image: 
-            radial-gradient(circle at 10% 20%, rgba(238, 237, 255, 0.8) 0%, rgba(244, 245, 250, 1) 60%),
-            radial-gradient(circle at 90% 80%, rgba(224, 242, 254, 0.8) 0%, rgba(244, 245, 250, 1) 60%) !important;
-        color: #1e293b;
+            radial-gradient(circle at 10% 20%, rgba(238, 237, 255, 0.85) 0%, rgba(244, 245, 250, 1) 60%),
+            radial-gradient(circle at 90% 80%, rgba(224, 242, 254, 0.85) 0%, rgba(244, 245, 250, 1) 60%) !important;
+        color: #1e293b !important;
+    }
+
+    /* Universal Text & Label Color Theme Safeguard */
+    .stMarkdown, p, span, label, div[data-testid="stMarkdownContainer"] {
+        color: #1e293b !important;
+        font-family: 'Plus Jakarta Sans', 'Inter', sans-serif;
     }
 
     /* Sidebar Styling */
@@ -103,10 +109,15 @@ st.markdown("""
         box-shadow: 4px 0 25px rgba(0, 0, 0, 0.02) !important;
     }
 
+    section[data-testid="stSidebar"] .stMarkdown p, section[data-testid="stSidebar"] span {
+        color: #475569 !important;
+    }
+
     /* Headings */
     h1, h2, h3, h4, h5, h6 {
-        font-family: 'Outfit', sans-serif !important;
+        font-family: 'Outfit', 'Plus Jakarta Sans', sans-serif !important;
         color: #0f172a !important;
+        font-weight: 700 !important;
     }
 
     /* Main Inner White Container */
@@ -126,7 +137,7 @@ st.markdown("""
         background: #f0eeff;
         border: 1px solid #e0e7ff;
         border-radius: 30px;
-        color: #5e5ce6;
+        color: #5e5ce6 !important;
         font-size: 0.8rem;
         font-weight: 700;
         letter-spacing: 0.05em;
@@ -136,10 +147,10 @@ st.markdown("""
 
     /* Title Styling */
     .brand-title {
-        font-family: 'Outfit', sans-serif;
+        font-family: 'Outfit', 'Plus Jakarta Sans', sans-serif;
         font-size: 3.4rem;
         font-weight: 800;
-        color: #1e293b;
+        color: #1e293b !important;
         margin-bottom: 0.4rem;
         line-height: 1.1;
     }
@@ -153,13 +164,13 @@ st.markdown("""
     .brand-sub {
         font-size: 1.3rem;
         font-weight: 600;
-        color: #334155;
+        color: #334155 !important;
         margin-bottom: 1rem;
     }
 
     .brand-desc {
         font-size: 1rem;
-        color: #64748b;
+        color: #64748b !important;
         line-height: 1.6;
         margin-bottom: 2rem;
     }
@@ -195,10 +206,10 @@ st.markdown("""
         flex-shrink: 0;
     }
 
-    .icon-purple { background: #eeedff; color: #5e5ce6; }
-    .icon-blue { background: #e0f2fe; color: #0284c7; }
-    .icon-green { background: #dcfce7; color: #16a34a; }
-    .icon-orange { background: #fef3c7; color: #d97706; }
+    .icon-purple { background: #eeedff; color: #5e5ce6 !important; }
+    .icon-blue { background: #e0f2fe; color: #0284c7 !important; }
+    .icon-green { background: #dcfce7; color: #16a34a !important; }
+    .icon-orange { background: #fef3c7; color: #d97706 !important; }
 
     /* Stats Bar */
     .stats-bar {
@@ -226,12 +237,24 @@ st.markdown("""
         height: 56px;
         border-radius: 50%;
         background: #eeedff;
-        color: #5e5ce6;
+        color: #5e5ce6 !important;
         display: flex;
         align-items: center;
         justify-content: center;
         font-size: 1.5rem;
         margin: 0 auto 1.2rem auto;
+    }
+
+    /* Tabs Styling */
+    button[data-baseweb="tab"] {
+        color: #64748b !important;
+        font-weight: 600 !important;
+        font-family: 'Plus Jakarta Sans', sans-serif !important;
+    }
+
+    button[aria-selected="true"] {
+        color: #5e5ce6 !important;
+        border-bottom-color: #5e5ce6 !important;
     }
 
     /* Inputs Customization */
@@ -241,6 +264,11 @@ st.markdown("""
         background-color: #f8fafc !important;
         color: #1e293b !important;
         font-size: 0.95rem !important;
+        font-family: 'Plus Jakarta Sans', sans-serif !important;
+    }
+
+    .stTextInput input::placeholder, .stTextArea textarea::placeholder {
+        color: #94a3b8 !important;
     }
 
     .stTextInput input:focus, .stSelectbox select:focus, .stTextArea textarea:focus {
